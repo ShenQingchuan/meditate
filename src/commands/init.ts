@@ -15,18 +15,20 @@ export default class Init extends Command {
     
     const isMedHomeExists = fs.existsSync(configDir);
     if (!isMedHomeExists) {
-      this.log('🛠 Creating Meditate home directory ...');
+      this.log('... 🛠 Creating Meditate home directory ...');
       fs.mkdirSync(configDir);
     } else {
-      this.log('✅ Meditate home directory found.');
+      this.log('... ✅ Meditate home directory found.');
     }
     const jsonConfigPath = path.resolve(configDir, 'config.json');
     const isConfigJsonExists = fs.existsSync(jsonConfigPath);
     if (!isConfigJsonExists) {
-      this.log('🛠 Creating Meditate config JSON file ...');
+      this.log('... 🛠 Creating Meditate config JSON file ...');
       fs.writeFileSync(jsonConfigPath, JSON.stringify({}, null, 2));
     } else {
-      this.log('✅ Meditate config JSON file found.');
+      this.log('... ✅ Meditate config JSON file found.');
     }
+
+    this.log('🎉 You can start using meditate now !');
   }
 }
