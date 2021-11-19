@@ -1,0 +1,65 @@
+{
+  "name": "meditate",
+  "description": "A powerful slack-off CLI application.",
+  "version": "0.0.1",
+  "author": "ShenQingchuan",
+  "bin": {
+    "med": "./bin/run"
+  },
+  "bugs": "https://github.com/ShenQingchuan/meditate/issues",
+  "dependencies": {
+    "@oclif/command": "^1.8.0",
+    "@oclif/config": "^1.17.0",
+    "@oclif/plugin-help": "^3.2.4",
+    "chalk": "^4.1.2",
+    "ora": "^5.4.1",
+    "readline-sync": "^1.4.10",
+    "tslib": "^1.14.1"
+  },
+  "devDependencies": {
+    "@oclif/dev-cli": "^1.26.0",
+    "@oclif/test": "^1.2.8",
+    "@types/chai": "^4.2.22",
+    "@types/mocha": "^9.0.0",
+    "@types/node": "^16.11.7",
+    "@types/readline-sync": "^1.4.4",
+    "@typescript-eslint/eslint-plugin": "^5.3.1",
+    "chai": "^4.3.4",
+    "globby": "^9.2.0",
+    "mocha": "^9.1.3",
+    "nyc": "^15.1.0",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.4.4"
+  },
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "files": [
+    "/bin",
+    "/lib",
+    "/npm-shrinkwrap.json",
+    "/oclif.manifest.json"
+  ],
+  "homepage": "https://github.com/ShenQingchuan/meditate",
+  "keywords": [
+    "oclif"
+  ],
+  "license": "MIT",
+  "main": "lib/index.js",
+  "oclif": {
+    "commands": "./lib/commands",
+    "bin": "med",
+    "plugins": [
+      "@oclif/plugin-help"
+    ]
+  },
+  "repository": "ShenQingchuan/meditate",
+  "scripts": {
+    "postpack": "rm -f oclif.manifest.json",
+    "posttest": "eslint . --ext .ts --config .eslintrc",
+    "prepack": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme",
+    "test": "nyc --extension .ts mocha --forbid-only \"test/**/*.test.ts\"",
+    "version": "oclif-dev readme && git add README.md"
+  },
+  "types": "lib/index.d.ts"
+}
