@@ -3,6 +3,6 @@ export interface BookReadHistory {
   progress: [number, number];
 }
 export interface BookConfig {
-  pageLines: number; // how many lines per page
+  pageSize: number; // how many lines per page
   history: Record<string, BookReadHistory>;
 }
