@@ -113,8 +113,6 @@ export default class Book extends Command {
       do {
         // print lines from book content
         console.clear();
-        console.log('[tmy flags ]', flags);
-        console.log('[tmy args ]', args);
         
         const progressText = chalk.bold.yellow(
           `[${sliceEnd}/${allLinesCount}]`
@@ -134,10 +132,12 @@ export default class Book extends Command {
         const opKey = keyIn("", { hideEchoBack: true, mask: "", limit: "qjk" });
         switch (opKey) {
           case "q":
+            // save config before quit
             bookConfig.history[filepath] = {
               total: allLinesCount,
               progress: [sliceStart, sliceEnd],
             };
+            bookConfig.pageSize = pageSize;
             setCommandConfig("book", {
               ...bookConfig,
             });
