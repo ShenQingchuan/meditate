@@ -44,3 +44,11 @@ export function setCommandConfig<K extends keyof CommandConfigMap>(
     throw new Error("load Meditate config failed!");
   }
 }
+
+export function cutByLength(str: string, len: number): string[] {
+  const slices: string[] = [];
+  for (let i = 0, l = str.length; i < l/len; i++) {
+    slices.push(str.slice(len * i, len * (i + 1)));
+  }
+  return slices
+}
