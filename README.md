@@ -43,8 +43,12 @@ USAGE
   $ med book [FILEPATH]
 
 OPTIONS
-  -h, --help  show CLI help
-  --restart   restart reading target book
+  -h, --help               help information for book reading command.
+  -j, --jump=jump          assign a position to start reading.
+  -l, --lineSize=lineSize  [default: 80] chars count displaying per line.
+  -p, --pageSize=pageSize  lines count displaying per page.
+  -s, --search=search      open searching view to locate given words.
+  --restart                restart reading progress of a given book.
 ```
 
 _See code: [src/commands/book.ts](https://github.com/ShenQingchuan/meditate/blob/v0.0.1/src/commands/book.ts)_

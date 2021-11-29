@@ -60,12 +60,12 @@ export default class Book extends Command {
   ctx: Partial<BookContext> = {};
 
   static flags = {
-    help: flags.help({ char: "h" }),
-    restart: flags.boolean(),
-    pageSize: flags.integer({ char: "p" }),
-    lineSize: flags.integer({ char: "l", default: 80 }),
-    search: flags.string({ char: "s" }),
-    jump: flags.integer({ char: "j" }),
+    help: flags.help({ char: "h", description: "help information for book reading command." }),
+    restart: flags.boolean({ description: "restart reading progress of a given book." }),
+    pageSize: flags.integer({ char: "p", description: "lines count displaying per page." }),
+    lineSize: flags.integer({ char: "l", default: 80, description: "chars count displaying per line." }),
+    search: flags.string({ char: "s", description: "open searching view to locate given words." }),
+    jump: flags.integer({ char: "j", description: "assign a position to start reading." }),
   };
 
   static args = [{ name: "filepath" }];
@@ -102,11 +102,14 @@ export default class Book extends Command {
     if (!assignStart) {
       assignStart = flags.jump;
     }
-    if (assignStart) {
+    if (assignStart) { // using assigned start position
       [sliceStart, sliceEnd] = [assignStart, assignStart + pageSize];
     }
-    if (sliceEnd > allLinesCount!) {
+    if (sliceEnd > allLinesCount!) { // avoid overflow
       sliceEnd = allLinesCount;
+    }
+    if (sliceEnd - sliceStart !== pageSize) { // fix slice range
+      sliceEnd = sliceStart + pageSize;
     }
 
     do {
