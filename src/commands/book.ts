@@ -170,6 +170,7 @@ export default class Book extends Command {
   }
 
   openSearchView(search: string) {
+    console.clear();
     const slices: [number, string][][] = [];
     this.contents.forEach((line, i) => {
       // got all search results lines(with its relative +2/-2 lines)
@@ -194,6 +195,11 @@ export default class Book extends Command {
         slices.push(fiveLines);
       }
     });
+
+    if (slices.length === 0) {
+      console.log(`❎ Searching keyword "${search}" not found!`);
+      return;
+    }
 
     let inSearchingMode = true;
     let showSearchResultIndex = 0;
@@ -296,6 +302,7 @@ export default class Book extends Command {
         this.openReadView(flags);
       }
     } catch (err) {
+      console.clear();
       this.error(`Error occured when opening book: ${err}`);
     }
   }
