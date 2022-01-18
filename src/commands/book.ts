@@ -7,6 +7,8 @@ import { BookConfig } from "../types/book";
 import * as path from "path";
 import * as fs from "fs";
 
+const emptyLineRegExp = /^\s*$/;
+
 function pageMoveForward(
   start: number,
   end: number,
@@ -262,7 +264,9 @@ export default class Book extends Command {
       }
       const loading = ora(`Opening file：${filepath}`).start();
       const bookBuffer = fs.readFileSync(filepath, "utf-8");
-      this.contents = bookBuffer.split(/\r?\n/); // load all lines contents in memory
+      this.contents = bookBuffer.split(/\r?\n/).filter(line => {
+        return !emptyLineRegExp.test(line.trim());
+      }); // load all lines contents in memory
       this.ctx.filepath = filepath;
 
       // pre line wrap contents
