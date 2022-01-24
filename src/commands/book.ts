@@ -119,7 +119,7 @@ export default class Book extends Command {
       // using assigned start position
       [sliceStart, sliceEnd] = [assignStart, assignStart + pageSize];
     }
-    if (sliceEnd > allLinesCount!) {
+    if (sliceEnd > allLinesCount) {
       // avoid overflow
       sliceEnd = allLinesCount;
     }
@@ -163,8 +163,13 @@ export default class Book extends Command {
             sliceStart,
             sliceEnd,
             pageSize,
-            allLinesCount!
+            allLinesCount
           );
+          if (sliceStart === allLinesCount) {
+            console.clear();
+            console.log(`🎉 You've finished reading the book!`);
+            return;
+          }
           break;
         case "k":
           [sliceStart, sliceEnd] = pageMoveBackward(
@@ -172,6 +177,9 @@ export default class Book extends Command {
             sliceEnd,
             pageSize
           );
+          if (sliceEnd === 0) {
+            return;
+          }
           break;
       }
     } while (inReadingMode);
