@@ -4,8 +4,9 @@ meditate
 a powerful slack-off CLI application.
 
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
-[![Version](https://img.shields.io/npm/v/meditate.svg)](https://npmjs.org/package/meditate)
-[![Downloads/week](https://img.shields.io/npm/dw/meditate.svg)](https://npmjs.org/package/meditate)
+[![NPM](https://nodei.co/npm/@slackoff/meditate.png?mini=true)](https://npmjs.org/package/@slackoff/meditate)
+[![Version](https://img.shields.io/npm/v/@slackoff/meditate.svg)](https://www.npmjs.com/package/@slackoff/meditate)
+[![Download/week](https://img.shields.io/npm/dw/@slackoff/meditate.svg)](https://www.npmjs.com/package/@slackoff/meditate)
 [![License](https://img.shields.io/npm/l/meditate.svg)](https://github.com/ShenQingchuan/meditate/blob/master/package.json)
 
 <!-- toc -->
@@ -19,7 +20,7 @@ $ npm install -g @slackoff/meditate
 $ med COMMAND
 running command...
 $ med (-v|--version|version)
-@slackoff/meditate/1.0.9 darwin-x64 node-v16.13.1
+@slackoff/meditate/1.0.11 darwin-x64 node-v16.13.1
 $ med --help [COMMAND]
 USAGE
   $ med COMMAND
@@ -47,7 +48,7 @@ OPTIONS
   --restart            restart reading progress of a given book.
 ```
 
-_See code: [src/commands/book.ts](https://github.com/ShenQingchuan/meditate/blob/v1.0.9/src/commands/book.ts)_
+_See code: [src/commands/book.ts](https://github.com/ShenQingchuan/meditate/blob/v1.0.11/src/commands/book.ts)_
 
 ## `med help [COMMAND]`
 
@@ -78,5 +79,5 @@ OPTIONS
   -h, --help  show CLI help
 ```
 
-_See code: [src/commands/init.ts](https://github.com/ShenQingchuan/meditate/blob/v1.0.9/src/commands/init.ts)_
+_See code: [src/commands/init.ts](https://github.com/ShenQingchuan/meditate/blob/v1.0.11/src/commands/init.ts)_
 <!-- commandsstop -->

@@ -95,14 +95,13 @@ export default class Book extends Command {
   openReadView(flags: any, assignStart?: number) {
     const { bookConfig, filepath, bookName } = this.ctx;
     const allLinesCount = this.contents.length; // get line count for text, preparing for reading progress statistics
-
     let inReadingMode = true;
     let pageSize = process.stdout.rows - 2; // remain 2 lines for progress bar and others
     let sliceStart = 0,
       sliceEnd = sliceStart + pageSize;
 
     // load progress history
-    const readHistory = bookConfig?.history[filepath!];
+    const readHistory = filepath ? bookConfig?.history[filepath] : undefined;
     if (readHistory && !flags.restart) {
       [sliceStart, sliceEnd] = readHistory.progress;
       // if the step of start & end from history is less than now page size,
