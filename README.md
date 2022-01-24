@@ -19,7 +19,7 @@ $ npm install -g @slackoff/meditate
 $ med COMMAND
 running command...
 $ med (-v|--version|version)
-@slackoff/meditate/1.0.7 darwin-x64 node-v16.13.1
+@slackoff/meditate/1.0.8 darwin-x64 node-v16.13.1
 $ med --help [COMMAND]
 USAGE
   $ med COMMAND
@@ -41,15 +41,13 @@ USAGE
   $ med book [FILEPATH]
 
 OPTIONS
-  -h, --help               help information for book reading command.
-  -j, --jump=jump          assign a position to start reading.
-  -l, --lineSize=lineSize  [default: 80] chars count displaying per line.
-  -p, --pageSize=pageSize  lines count displaying per page.
-  -s, --search=search      open searching view to locate given words.
-  --restart                restart reading progress of a given book.
+  -h, --help           help information for book reading command.
+  -j, --jump=jump      assign a position to start reading.
+  -s, --search=search  open searching view to locate given words.
+  --restart            restart reading progress of a given book.
 ```
 
-_See code: [src/commands/book.ts](https://github.com/ShenQingchuan/meditate/blob/v1.0.7/src/commands/book.ts)_
+_See code: [src/commands/book.ts](https://github.com/ShenQingchuan/meditate/blob/v1.0.8/src/commands/book.ts)_
 
 ## `med help [COMMAND]`
 
@@ -80,5 +78,5 @@ OPTIONS
   -h, --help  show CLI help
 ```
 
-_See code: [src/commands/init.ts](https://github.com/ShenQingchuan/meditate/blob/v1.0.7/src/commands/init.ts)_
+_See code: [src/commands/init.ts](https://github.com/ShenQingchuan/meditate/blob/v1.0.8/src/commands/init.ts)_
 <!-- commandsstop -->

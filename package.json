@@ -1,7 +1,7 @@
 {
   "name": "@slackoff/meditate",
   "description": "A powerful slack-off CLI application.",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "author": "ShenQingchuan",
   "bin": {
     "med": "./bin/run"

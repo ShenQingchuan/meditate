@@ -2,7 +2,12 @@ import ora from "ora";
 import chalk from "chalk";
 import { Command, flags } from "@oclif/command";
 import { keyIn } from "readline-sync";
-import { cutByLength, loadCommandConfig, setCommandConfig } from "../utils";
+import {
+  wrapByTerminalWidth,
+  loadCommandConfig,
+  setCommandConfig,
+  terminalStringWidth,
+} from "../utils";
 import { BookConfig } from "../types/book";
 import * as path from "path";
 import * as fs from "fs";
@@ -62,22 +67,28 @@ export default class Book extends Command {
   ctx: Partial<BookContext> = {};
 
   static flags = {
-    help: flags.help({ char: "h", description: "help information for book reading command." }),
-    restart: flags.boolean({ description: "restart reading progress of a given book." }),
-    pageSize: flags.integer({ char: "p", description: "lines count displaying per page." }),
-    lineSize: flags.integer({ char: "l", default: 80, description: "chars count displaying per line." }),
-    search: flags.string({ char: "s", description: "open searching view to locate given words." }),
-    jump: flags.integer({ char: "j", description: "assign a position to start reading." }),
+    help: flags.help({
+      char: "h",
+      description: "help information for book reading command.",
+    }),
+    restart: flags.boolean({
+      description: "restart reading progress of a given book.",
+    }),
+    search: flags.string({
+      char: "s",
+      description: "open searching view to locate given words.",
+    }),
+    jump: flags.integer({
+      char: "j",
+      description: "assign a position to start reading.",
+    }),
   };
 
   static args = [{ name: "filepath" }];
 
   initConfig = (): BookConfig => {
     return {
-      pageSize: 5,
-      lineSize: 80,
       history: {},
-      preCutted: false,
     };
   };
 
@@ -86,7 +97,7 @@ export default class Book extends Command {
     const allLinesCount = this.contents.length; // get line count for text, preparing for reading progress statistics
 
     let inReadingMode = true;
-    const pageSize = flags.pageSize ?? bookConfig!.pageSize;
+    let pageSize = process.stdout.rows - 2; // remain 2 lines for progress bar and others
     let sliceStart = 0,
       sliceEnd = sliceStart + pageSize;
 
@@ -104,13 +115,16 @@ export default class Book extends Command {
     if (!assignStart) {
       assignStart = flags.jump;
     }
-    if (assignStart) { // using assigned start position
+    if (assignStart) {
+      // using assigned start position
       [sliceStart, sliceEnd] = [assignStart, assignStart + pageSize];
     }
-    if (sliceEnd > allLinesCount!) { // avoid overflow
+    if (sliceEnd > allLinesCount!) {
+      // avoid overflow
       sliceEnd = allLinesCount;
     }
-    if (sliceEnd - sliceStart !== pageSize) { // fix slice range
+    if (sliceEnd - sliceStart !== pageSize) {
+      // fix slice range
       sliceEnd = sliceStart + pageSize;
     }
 
@@ -138,12 +152,6 @@ export default class Book extends Command {
             total: allLinesCount!,
             progress: [sliceStart, sliceEnd],
           };
-          if (flags.pageSize) {
-            bookConfig!.pageSize = flags.pageSize;
-          }
-          if (flags.lineSize) {
-            bookConfig!.lineSize = flags.lineSize;
-          }
 
           setCommandConfig("book", {
             ...bookConfig!,
@@ -243,15 +251,22 @@ export default class Book extends Command {
     this.openReadView(flags, slices[showSearchResultIndex][2][0]);
   }
 
-  preLineWrap(flags: any) {
+  preLineWrap() {
+    const maxLineCountLength = String(this.contents.length).length;
+    const maxColumns = process.stdout.columns;
+    const contentMaxLength = maxColumns - (maxLineCountLength + 4); // 4 = space + vertical line + 2 space
+
     for (let i = 0; i < this.contents.length; i++) {
       const line = this.contents[i];
-      if (line.length > 80) {
-        const cutSlice = cutByLength(line, flags.lineSize);
-        this.contents[i] = cutSlice.join("\n");
+      const width = terminalStringWidth(line);
+      if (width > contentMaxLength) {
+        const cutSlice = wrapByTerminalWidth(
+          line,
+          Math.round(contentMaxLength / 2)
+        );
+        this.contents.splice(i, 1, ...cutSlice);
       }
     }
-    this.contents = this.contents.join("\n").split(/\r?\n/);
   }
 
   async run() {
@@ -270,23 +285,13 @@ export default class Book extends Command {
       }
       const loading = ora(`Opening file：${filepath}`).start();
       const bookBuffer = fs.readFileSync(filepath, "utf-8");
-      this.contents = bookBuffer.split(/\r?\n/).filter(line => {
+      this.contents = bookBuffer.split(/\r?\n/).filter((line) => {
         return !emptyLineRegExp.test(line.trim());
       }); // load all lines contents in memory
       this.ctx.filepath = filepath;
 
       // pre line wrap contents
-      if (this.ctx.bookConfig) {
-        this.preLineWrap(flags);
-        this.ctx.bookConfig.preCutted = true;
-
-        // async write wrapped contents back to source file
-        fs.writeFile(filepath, this.contents.join("\n"), (error) => {
-          if (error) {
-            throw Error("pre line wrap failed !");
-          }
-        });
-      }
+      this.preLineWrap();
 
       let bookName = filepath.split("/").pop();
       this.ctx.bookName = bookName;
