@@ -72,6 +72,7 @@ export default class Book extends Command {
       description: "help information for book reading command.",
     }),
     restart: flags.boolean({
+      char: 'r',
       description: "restart reading progress of a given book.",
     }),
     search: flags.string({
