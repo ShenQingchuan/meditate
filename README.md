@@ -3,11 +3,32 @@ meditate
 
 a powerful slack-off CLI application.
 
-[![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
 [![NPM](https://nodei.co/npm/@slackoff/meditate.png?mini=true)](https://npmjs.org/package/@slackoff/meditate)
+
+[![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
 [![Version](https://img.shields.io/npm/v/@slackoff/meditate.svg)](https://www.npmjs.com/package/@slackoff/meditate)
 [![Download/week](https://img.shields.io/npm/dw/@slackoff/meditate.svg)](https://www.npmjs.com/package/@slackoff/meditate)
 [![License](https://img.shields.io/npm/l/meditate.svg)](https://github.com/ShenQingchuan/meditate/blob/master/package.json)
+
+# Preview
+
+## Reading book
+
+**Read view**
+```
+med ~/Downloads/天才基本法.txt
+```
+
+![read view](https://user-images.githubusercontent.com/46062972/150922709-00989370-f025-4c89-beaf-fb041c50f21b.png)
+
+
+**Search view**
+
+```bash
+ med book ~/Downloads/金凤华庭.txt -s 未梳洗
+```
+
+![search view](https://user-images.githubusercontent.com/46062972/150922533-9d76b830-55c3-4c2f-8eed-e87916ad3777.png)
 
 <!-- toc -->
 * [Usage](#usage)
