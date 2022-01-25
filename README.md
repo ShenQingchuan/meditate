@@ -42,7 +42,7 @@ $ npm install -g @slackoff/meditate
 $ med COMMAND
 running command...
 $ med (-v|--version|version)
-@slackoff/meditate/1.0.13 darwin-x64 node-v14.18.2
+@slackoff/meditate/1.0.14 darwin-x64 node-v16.13.1
 $ med --help [COMMAND]
 USAGE
   $ med COMMAND
@@ -70,7 +70,7 @@ OPTIONS
   -s, --search=search  open searching view to locate given words.
 ```
 
-_See code: [src/commands/book.ts](https://github.com/ShenQingchuan/meditate/blob/v1.0.13/src/commands/book.ts)_
+_See code: [src/commands/book.ts](https://github.com/ShenQingchuan/meditate/blob/v1.0.14/src/commands/book.ts)_
 
 ## `med help [COMMAND]`
 
@@ -101,5 +101,5 @@ OPTIONS
   -h, --help  show CLI help
 ```
 
-_See code: [src/commands/init.ts](https://github.com/ShenQingchuan/meditate/blob/v1.0.13/src/commands/init.ts)_
+_See code: [src/commands/init.ts](https://github.com/ShenQingchuan/meditate/blob/v1.0.14/src/commands/init.ts)_
 <!-- commandsstop -->
