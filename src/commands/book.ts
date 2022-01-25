@@ -128,6 +128,17 @@ export default class Book extends Command {
       sliceEnd = sliceStart + pageSize;
     }
 
+    const saveProgress = () => {
+      bookConfig!.history[filepath!] = {
+        total: allLinesCount,
+        progress: [sliceStart, sliceEnd],
+      };
+
+      setCommandConfig("book", {
+        ...bookConfig!,
+      });
+    }
+
     do {
       // clear screen before printing lines from book content
       console.clear();
@@ -148,14 +159,7 @@ export default class Book extends Command {
       const opKey = keyIn("", { hideEchoBack: true, mask: "", limit: "qjk" });
       switch (opKey) {
         case "q":
-          bookConfig!.history[filepath!] = {
-            total: allLinesCount!,
-            progress: [sliceStart, sliceEnd],
-          };
-
-          setCommandConfig("book", {
-            ...bookConfig!,
-          });
+          saveProgress();
           console.clear();
           return;
         case "j":
@@ -168,6 +172,7 @@ export default class Book extends Command {
           if (sliceStart === allLinesCount) {
             console.clear();
             console.log(`🎉 You've finished reading the book!`);
+            saveProgress();
             return;
           }
           break;
