@@ -270,7 +270,7 @@ export default class Book extends Command {
       if (width > contentMaxLength) {
         const cutSlice = wrapByTerminalWidth(
           line,
-          Math.round(contentMaxLength / 2)
+          Math.round(contentMaxLength * 0.8)
         );
         this.contents.splice(i, 1, ...cutSlice);
       }
