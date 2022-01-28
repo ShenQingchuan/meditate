@@ -9,7 +9,6 @@ import {
   terminalStringWidth,
 } from "../../utils";
 import { emptyLineRegExp } from "../../constants";
-import { BookData } from "./types";
 import * as path from "path";
 import * as fs from "fs";
 

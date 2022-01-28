@@ -11,7 +11,6 @@ import {
   WordleFlag,
 } from "../../constants";
 import { loadCommandData, setCommandData } from "../../utils";
-import { WordleChar, WordleData } from "./types";
 
 dayjs.extend(relativeTime);
 

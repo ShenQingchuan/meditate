@@ -1,7 +1,7 @@
-export interface BookReadHistory {
+declare interface BookReadHistory {
   total: number;
   progress: [number, number];
 }
-export interface BookData {
+declare interface BookData {
   history: Record<string, BookReadHistory>;
 }

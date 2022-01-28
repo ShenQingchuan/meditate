@@ -1,8 +1,8 @@
-export interface WordleChar {
+declare interface WordleChar {
   char: string;
   flag: import("../../constants").WordleFlag;
 }
-export interface WordleData {
+declare interface WordleData {
   lastPassDate?: number;
   lastEvaluations?: string[][];
   history: number[];
