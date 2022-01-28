@@ -3,7 +3,13 @@ import chalk from "chalk";
 import dayjs, { Dayjs } from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { question } from "readline-sync";
-import { allWords, answers, narrowViewWarn, WordleFlag } from "../../constants";
+import {
+  allWords,
+  answers,
+  narrowViewWarn,
+  validWordleGuessRegExp,
+  WordleFlag,
+} from "../../constants";
 import { loadCommandData, setCommandData } from "../../utils";
 import { WordleChar, WordleData } from "./types";
 
@@ -36,12 +42,13 @@ const computeWordleFlags = (input: string, answer: string) =>
   input.split("").map<WordleChar>((char, i) => {
     // input and answer are all 5 letters
     const correctChar = answer[i];
+
     const flag =
       char === correctChar
         ? WordleFlag.RIGHT
-        : answer.includes(char)
-        ? WordleFlag.MISPOSITION
-        : WordleFlag.WRONG;
+        : !answer.includes(char)
+        ? WordleFlag.WRONG
+        : WordleFlag.MISPOSITION;
     return {
       char,
       flag,
@@ -118,7 +125,7 @@ export default class Wordle extends Command {
     const answer = getWordOfTheDay();
     let round = 0;
 
-    while (round <= 6) {
+    while (round < 6) {
       // waiting for user sinput
       let input = "",
         isInputValid = false,
@@ -127,7 +134,9 @@ export default class Wordle extends Command {
       do {
         this.printResultView();
         input = question(chalk.cyan(`${alertMsg}\ninput your answer: `));
-        if (!allWords.includes(input)) {
+        if (!validWordleGuessRegExp.test(input)) {
+          alertMsg = chalk.redBright("Answer is supposed to contain 5 letters only");
+        } else if (!allWords.includes(input)) {
           alertMsg = chalk.redBright("Not in the word list.");
         } else if (input.length < 5) {
           alertMsg = chalk.redBright("Answer words contains 5 letters");
@@ -146,6 +155,8 @@ export default class Wordle extends Command {
         this.exit();
       }
     }
+    this.printResultView(); // after `round` is assigned to 6
+    console.log(chalk.green("🤔 Maybe try again?\n"));
   }
 
   public async run(): Promise<void> {
