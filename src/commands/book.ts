@@ -4,11 +4,11 @@ import { Command, flags } from "@oclif/command";
 import { keyIn } from "readline-sync";
 import {
   wrapByTerminalWidth,
-  loadCommandConfig,
-  setCommandConfig,
+  loadCommandData,
+  setCommandData,
   terminalStringWidth,
 } from "../utils";
-import { BookConfig } from "../types/book";
+import { BookData } from "../types/book";
 import * as path from "path";
 import * as fs from "fs";
 
@@ -59,7 +59,7 @@ interface BookContext {
   allLinesCount: number;
   filepath: string;
   bookName: string;
-  bookConfig: BookConfig;
+  bookData: BookData;
 }
 export default class Book extends Command {
   static description = "Read a novel, enjoy a story...";
@@ -87,14 +87,14 @@ export default class Book extends Command {
 
   static args = [{ name: "filepath" }];
 
-  initConfig = (): BookConfig => {
+  initData = (): BookData => {
     return {
       history: {},
     };
   };
 
   openReadView(flags: any, assignStart?: number) {
-    const { bookConfig, filepath, bookName } = this.ctx;
+    const { bookData, filepath, bookName } = this.ctx;
     const allLinesCount = this.contents.length; // get line count for text, preparing for reading progress statistics
     let inReadingMode = true;
     let pageSize = process.stdout.rows - 2; // remain 2 lines for progress bar and others
@@ -102,7 +102,7 @@ export default class Book extends Command {
       sliceEnd = sliceStart + pageSize;
 
     // load progress history
-    const readHistory = filepath ? bookConfig?.history[filepath] : undefined;
+    const readHistory = filepath ? bookData?.history[filepath] : undefined;
     if (readHistory && !flags.restart) {
       [sliceStart, sliceEnd] = readHistory.progress;
       // if the step of start & end from history is less than now page size,
@@ -129,13 +129,13 @@ export default class Book extends Command {
     }
 
     const saveProgress = () => {
-      bookConfig!.history[filepath!] = {
+      bookData!.history[filepath!] = {
         total: allLinesCount,
         progress: [sliceStart, sliceEnd],
       };
 
-      setCommandConfig("book", {
-        ...bookConfig!,
+      setCommandData("book", {
+        ...bookData!,
       });
     }
 
@@ -285,8 +285,8 @@ export default class Book extends Command {
   async run() {
     const { flags, args } = this.parse(Book);
 
-    // load book command config
-    this.ctx.bookConfig = loadCommandConfig("book", this.initConfig);
+    // load book command data
+    this.ctx.bookData = loadCommandData("book", this.initData);
 
     try {
       let filepath: string = args.filepath;

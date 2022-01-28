@@ -1,5 +1,5 @@
-import { BookConfig } from "./book";
+import { BookData } from "./book";
 
-export interface CommandConfigMap {
-  book: BookConfig;
+export interface CommandDataMap {
+  book: BookData;
 }

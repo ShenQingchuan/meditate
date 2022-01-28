@@ -5,7 +5,7 @@ import {
   existsSync as fsExistsSync,
   mkdirSync as fsMkdirSync
 } from "fs";
-import type { CommandConfigMap } from "../types";
+import type { CommandDataMap } from "../types";
 
 export function getMedHomeDir(): string {
   const userHomeDir = process.env.HOME || process.env.USERPROFILE || "~";
@@ -25,11 +25,11 @@ export function initMedHomeDir(quite = false) {
   } else {
     printMessage("... ✅ Meditate home directory found.");
   }
-  const jsonConfigPath = pathResolve(configDir, "config.json");
-  const isConfigJsonExists = fsExistsSync(jsonConfigPath);
-  if (!isConfigJsonExists) {
+  const jsonDataPath = pathResolve(configDir, "config.json");
+  const isDataJsonExists = fsExistsSync(jsonDataPath);
+  if (!isDataJsonExists) {
     printMessage("... 🛠 Creating Meditate config JSON file ...");
-    fsWriteFileSync(jsonConfigPath, JSON.stringify({}, null, 2));
+    fsWriteFileSync(jsonDataPath, JSON.stringify({}, null, 2));
   } else {
     printMessage("... ✅ Meditate config JSON file found.");
   }
@@ -37,10 +37,10 @@ export function initMedHomeDir(quite = false) {
   printMessage("🎉 You can start using meditate now !");
 }
 
-export function loadCommandConfig<K extends keyof CommandConfigMap>(
-  cmd: keyof CommandConfigMap,
+export function loadCommandData<K extends keyof CommandDataMap>(
+  cmd: keyof CommandDataMap,
   init?: () => any // run init if command config is undefined
-): CommandConfigMap[K] {
+): CommandDataMap[K] {
   const configFilePath = pathResolve(getMedHomeDir(), "config.json");
   let configString = '{}';
   try {
@@ -54,27 +54,27 @@ export function loadCommandConfig<K extends keyof CommandConfigMap>(
 
   try {
     const configJSON = JSON.parse(configString);
-    const cmdConfig = configJSON[cmd] ?? init?.();
+    const cmdData = configJSON[cmd] ?? init?.();
 
     // write in initialized config
-    configJSON[cmd] = cmdConfig;
+    configJSON[cmd] = cmdData;
     fsWriteFileSync(configFilePath, JSON.stringify(configJSON, null, 2));
 
-    return cmdConfig;
+    return cmdData;
   } catch (err) {
     throw new Error("load Meditate config failed!");
   }
 }
 
-export function setCommandConfig<K extends keyof CommandConfigMap>(
-  cmd: keyof CommandConfigMap,
-  newConfig: CommandConfigMap[K]
+export function setCommandData<K extends keyof CommandDataMap>(
+  cmd: keyof CommandDataMap,
+  newData: CommandDataMap[K]
 ): void {
   const configFilePath = pathResolve(getMedHomeDir(), "config.json");
   const configBuffer = fsReadFileSync(configFilePath);
   try {
-    const configJSON: CommandConfigMap = JSON.parse(configBuffer.toString());
-    configJSON[cmd] = newConfig;
+    const configJSON: CommandDataMap = JSON.parse(configBuffer.toString());
+    configJSON[cmd] = newData;
     fsWriteFileSync(configFilePath, JSON.stringify(configJSON, null, 2));
   } catch (err) {
     throw new Error("load Meditate config failed!");
