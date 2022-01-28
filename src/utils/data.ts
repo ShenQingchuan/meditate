@@ -12,71 +12,84 @@ export function getMedHomeDir(): string {
   return pathResolve(userHomeDir, ".meditate");
 }
 
-export function initMedHomeDir(quite = false) {
-  let configDir = getMedHomeDir();
+export function initMedHomeDir(quite = false, callback?: () => void) {
+  const homeDir = getMedHomeDir();
+  let dataDir = `${homeDir}/data`;
   const printMessage = (msg: string) => {
-    quite && console.log(msg)
+    !quite && console.log(msg)
   }
 
-  const isMedHomeExists = fsExistsSync(configDir);
+  // guard for home directory
+  const isMedHomeExists = fsExistsSync(homeDir);
   if (!isMedHomeExists) {
     printMessage("... 🛠 Creating Meditate home directory ...");
-    fsMkdirSync(configDir);
+    fsMkdirSync(homeDir);
   } else {
     printMessage("... ✅ Meditate home directory found.");
   }
-  const jsonDataPath = pathResolve(configDir, "config.json");
-  const isDataJsonExists = fsExistsSync(jsonDataPath);
-  if (!isDataJsonExists) {
-    printMessage("... 🛠 Creating Meditate config JSON file ...");
-    fsWriteFileSync(jsonDataPath, JSON.stringify({}, null, 2));
+
+  // guard for $home/data directory
+  const isMedDataDirExists = fsExistsSync(dataDir);
+  if (!isMedDataDirExists) {
+    printMessage("... 🛠 Creating Meditate data directory ...");
+    fsMkdirSync(dataDir);
   } else {
-    printMessage("... ✅ Meditate config JSON file found.");
+    printMessage("... ✅ Meditate data directory found.");
   }
+
+  callback?.();
 
   printMessage("🎉 You can start using meditate now !");
 }
 
 export function loadCommandData<K extends keyof CommandDataMap>(
-  cmd: keyof CommandDataMap,
-  init?: () => any // run init if command config is undefined
+  cmd: K,
+  init?: () => any // run init if command data is undefined
 ): CommandDataMap[K] {
-  const configFilePath = pathResolve(getMedHomeDir(), "config.json");
-  let configString = '{}';
+  const dataFilePath = pathResolve(
+    `${getMedHomeDir()}/data`, `${cmd}.json`
+  );
+  let dataString = '{}';
   try {
-    const configBuffer = fsReadFileSync(configFilePath);
-    configString = configBuffer.toString();
+    const dataBuffer = fsReadFileSync(dataFilePath);
+    dataString = dataBuffer.toString();
   } catch (err) {
-    // read error: config file not found
-    // need to reinitialize
-    initMedHomeDir();
+    // read error: data file not found
+    // need to initialize
+    initMedHomeDir(true, () => {
+      const isDataJsonExists = fsExistsSync(dataFilePath);
+      if (!isDataJsonExists) {
+        fsWriteFileSync(dataFilePath, JSON.stringify({}));
+      }
+    });
+    // and continue to use the initialized '{}' above.
   }
 
   try {
-    const configJSON = JSON.parse(configString);
-    const cmdData = configJSON[cmd] ?? init?.();
+    const dataJSON = JSON.parse(dataString);
+    const cmdData = dataJSON[cmd] ?? init?.();
 
-    // write in initialized config
-    configJSON[cmd] = cmdData;
-    fsWriteFileSync(configFilePath, JSON.stringify(configJSON, null, 2));
+    // write in initialized data
+    dataJSON[cmd] = cmdData;
+    fsWriteFileSync(dataFilePath, JSON.stringify(dataJSON));
 
     return cmdData;
   } catch (err) {
-    throw new Error("load Meditate config failed!");
+    throw new Error("load Meditate data failed!");
   }
 }
 
 export function setCommandData<K extends keyof CommandDataMap>(
-  cmd: keyof CommandDataMap,
+  cmd: K,
   newData: CommandDataMap[K]
 ): void {
-  const configFilePath = pathResolve(getMedHomeDir(), "config.json");
-  const configBuffer = fsReadFileSync(configFilePath);
+  const dataFilePath = pathResolve(`${getMedHomeDir()}/data`, `${cmd}.json`);
+  const dataBuffer = fsReadFileSync(dataFilePath);
   try {
-    const configJSON: CommandDataMap = JSON.parse(configBuffer.toString());
-    configJSON[cmd] = newData;
-    fsWriteFileSync(configFilePath, JSON.stringify(configJSON, null, 2));
+    const dataJSON: CommandDataMap = JSON.parse(dataBuffer.toString());
+    dataJSON[cmd] = newData;
+    fsWriteFileSync(dataFilePath, JSON.stringify(dataJSON));
   } catch (err) {
-    throw new Error("load Meditate config failed!");
+    throw new Error("load Meditate data failed!");
   }
 }

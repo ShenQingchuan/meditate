@@ -388,6 +388,11 @@
   version "16.11.21"
   resolved "https://registry.npmjs.org/@types/node/-/node-16.11.21.tgz#474d7589a30afcf5291f59bd49cca9ad171ffde4"
 
+"@types/random-words@^1.1.2":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@types/random-words/-/random-words-1.1.2.tgz#4ffe4da4817b4629d8802c8ac16466783e745c6e"
+  integrity sha512-gULpJ68bNovfBWPWNNhwJgd/GcKdfkPpXXQGgACQWffgy6LRiJB4+4s/IslhFJKQvb5wBlnlOwFJ6RawHU5z3A==
+
 "@types/readline-sync@^1.4.4":
   version "1.4.4"
   resolved "https://registry.npmjs.org/@types/readline-sync/-/readline-sync-1.4.4.tgz#8568292efe4ddd94d0ccee958b29cc3f4e0ea140"
@@ -824,6 +829,11 @@ cross-spawn@^7.0.0:
     path-key "^3.1.0"
     shebang-command "^2.0.0"
     which "^2.0.1"
+
+dayjs@^1.10.7:
+  version "1.10.7"
+  resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.10.7.tgz#2cf5f91add28116748440866a0a1d26f3a6ce468"
+  integrity sha512-P6twpd70BcPK34K26uJ1KT3wlhpuOAPoMwJzpsIWUxHZ7wpmbdZL/hQqBDfz7hGurYSa5PhzdhDHtt319hL3ig==
 
 debug@4.3.1:
   version "4.3.1"
@@ -1842,6 +1852,19 @@ queue-microtask@^1.2.2:
   version "1.2.3"
   resolved "https://registry.npmjs.org/queue-microtask/-/queue-microtask-1.2.3.tgz#4929228bbc724dfac43e0efb058caf7b6cfb6243"
 
+random-word-by-length@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/random-word-by-length/-/random-word-by-length-0.1.0.tgz#b99a3c90a20efc9d831b53ba0aef14fe2d0e63c9"
+  integrity sha1-uZo8kKIO/J2DG1O6Cu8U/i0OY8k=
+  dependencies:
+    unique-random "~0.1.0"
+    word-list-json "^0.2.0"
+
+random-words@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/random-words/-/random-words-1.1.2.tgz#edd0aa531cafc9d1499cb06f7314ac93a9086496"
+  integrity sha512-GwgC+Yu+D5/044grf2QqaYk3ZrQip7yfgvkj/6bJ3H3B3KrE7qoNPbWaYd06hrigqAkrPzNVEpRlnBaNx4bDuA==
+
 randombytes@^2.1.0:
   version "2.1.0"
   resolved "https://registry.npmjs.org/randombytes/-/randombytes-2.1.0.tgz#df6f84372f0270dc65cdf6291349ab7a473d4f2a"
@@ -2217,6 +2240,11 @@ typescript@^4.4.4:
   version "4.5.5"
   resolved "https://registry.npmjs.org/typescript/-/typescript-4.5.5.tgz#d8c953832d28924a9e3d37c73d729c846c5896f3"
 
+unique-random@~0.1.0:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/unique-random/-/unique-random-0.1.1.tgz#c4ccaabedaab8534e0f54daf5f10743ee5c692ad"
+  integrity sha1-xMyqvtqrhTTg9U2vXxB0PuXGkq0=
+
 universalify@^0.1.0:
   version "0.1.2"
   resolved "https://registry.npmjs.org/universalify/-/universalify-0.1.2.tgz#b646f69be3942dabcecc9d6639c80dc105efaa66"
@@ -2269,6 +2297,11 @@ widest-line@^3.1.0:
   resolved "https://registry.npmjs.org/widest-line/-/widest-line-3.1.0.tgz#8292333bbf66cb45ff0de1603b136b7ae1496eca"
   dependencies:
     string-width "^4.0.0"
+
+word-list-json@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/word-list-json/-/word-list-json-0.2.0.tgz#b8d2c934e9129bffb0e48f64af71020691f78a1f"
+  integrity sha1-uNLJNOkSm/+w5I9kr3ECBpH3ih8=
 
 workerpool@6.1.0:
   version "6.1.0"

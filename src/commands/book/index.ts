@@ -7,12 +7,11 @@ import {
   loadCommandData,
   setCommandData,
   terminalStringWidth,
-} from "../utils";
-import { BookData } from "../types/book";
+} from "../../utils";
+import { emptyLineRegExp } from "../../constants";
+import { BookData } from "./types";
 import * as path from "path";
 import * as fs from "fs";
-
-const emptyLineRegExp = /^\s*$/;
 
 function pageMoveForward(
   start: number,
@@ -59,13 +58,11 @@ interface BookContext {
   allLinesCount: number;
   filepath: string;
   bookName: string;
-  bookData: BookData;
 }
 export default class Book extends Command {
   static description = "Read a novel, enjoy a story...";
   contents: string[] = [];
-  ctx: Partial<BookContext> = {};
-
+  ctx: BookContext = {} as any; // lateinit
   static flags = {
     help: flags.help({
       char: "h",
@@ -84,7 +81,6 @@ export default class Book extends Command {
       description: "assign a position to start reading.",
     }),
   };
-
   static args = [{ name: "filepath" }];
 
   initData = (): BookData => {
@@ -93,8 +89,8 @@ export default class Book extends Command {
     };
   };
 
-  openReadView(flags: any, assignStart?: number) {
-    const { bookData, filepath, bookName } = this.ctx;
+  openReadView(bookData: BookData, flags: any, assignStart?: number) {
+    const { filepath, bookName } = this.ctx;
     const allLinesCount = this.contents.length; // get line count for text, preparing for reading progress statistics
     let inReadingMode = true;
     let pageSize = process.stdout.rows - 2; // remain 2 lines for progress bar and others
@@ -129,13 +125,13 @@ export default class Book extends Command {
     }
 
     const saveProgress = () => {
-      bookData!.history[filepath!] = {
+      bookData.history[filepath] = {
         total: allLinesCount,
         progress: [sliceStart, sliceEnd],
       };
 
       setCommandData("book", {
-        ...bookData!,
+        ...bookData,
       });
     }
 
@@ -190,7 +186,7 @@ export default class Book extends Command {
     } while (inReadingMode);
   }
 
-  openSearchView(search: string) {
+  openSearchView(bookData: BookData, search: string) {
     console.clear();
     const slices: [number, string][][] = [];
     this.contents.forEach((line, i) => {
@@ -261,7 +257,7 @@ export default class Book extends Command {
       }
     } while (inSearchingMode);
 
-    this.openReadView(flags, slices[showSearchResultIndex][2][0]);
+    this.openReadView(bookData, flags, slices[showSearchResultIndex][2][0]);
   }
 
   preLineWrap() {
@@ -286,7 +282,7 @@ export default class Book extends Command {
     const { flags, args } = this.parse(Book);
 
     // load book command data
-    this.ctx.bookData = loadCommandData("book", this.initData);
+    const bookData = loadCommandData("book", this.initData);
 
     try {
       let filepath: string = args.filepath;
@@ -296,7 +292,7 @@ export default class Book extends Command {
       if (args.filepath.startsWith(".")) {
         filepath = path.resolve(__dirname, filepath);
       }
-      const loading = ora(`Opening file：${filepath}`).start();
+      const loading = ora(`Opening file ${filepath} ...\n`).start();
       const bookBuffer = fs.readFileSync(filepath, "utf-8");
       this.contents = bookBuffer.split(/\r?\n/).filter((line) => {
         return !emptyLineRegExp.test(line.trim());
@@ -306,7 +302,7 @@ export default class Book extends Command {
       // pre line wrap contents
       this.preLineWrap();
 
-      let bookName = filepath.split("/").pop();
+      let bookName = filepath.split("/").pop() || 'Unknown book';
       this.ctx.bookName = bookName;
       if (bookName?.endsWith(".txt")) {
         bookName = bookName.slice(0, bookName.length - 4);
@@ -315,13 +311,15 @@ export default class Book extends Command {
 
       // if search some text in novel:
       if (flags.search) {
-        this.openSearchView(flags.search);
+        this.openSearchView(bookData, flags.search);
       } else {
-        this.openReadView(flags);
+        this.openReadView(bookData, flags);
       }
     } catch (err) {
       console.clear();
-      this.error(`Error occured when opening book: ${err}`);
+      this.error(`${chalk.red('Panicked during reading book:')} ${
+        (err as Error).stack || err
+      }`);
     }
   }
 }
