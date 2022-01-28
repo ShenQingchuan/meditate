@@ -29,6 +29,11 @@ med ~/Downloads/天才基本法.txt
 
 ![search view](https://user-images.githubusercontent.com/46062972/150922533-9d76b830-55c3-4c2f-8eed-e87916ad3777.png)
 
+## Wordle game
+
+![Wordle game](https://user-images.githubusercontent.com/46062972/151534206-de70fdec-9960-4aae-be85-9333441a90b7.png)
+
+
 <!-- toc -->
 
 - [meditate](#meditate)
