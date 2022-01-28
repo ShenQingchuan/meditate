@@ -4,6 +4,6 @@ declare interface WordleChar {
 }
 declare interface WordleData {
   lastPassDate?: number;
-  lastEvaluations?: string[][];
-  history: number[];
+  lastEvaluations?: (string | null)[];
+  history: [number, (string | null)[]][];
 }

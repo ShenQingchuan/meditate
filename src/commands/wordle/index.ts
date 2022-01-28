@@ -32,10 +32,6 @@ const getWordOfTheDay = () => {
   }
   return answers[day];
 };
-const creactEvaluations = () =>
-  Array.from({ length: 6 }, () =>
-    Array.from({ length: 5 }, () => ({ char: " ", flag: WordleFlag.NONE }))
-  );
 
 const computeWordleFlags = (input: string, answer: string) =>
   input.split("").map<WordleChar>((char, i) => {
@@ -54,7 +50,6 @@ const computeWordleFlags = (input: string, answer: string) =>
     };
   });
 const flagToColor = {
-  [WordleFlag.NONE]: (s: string) => s,
   [WordleFlag.RIGHT]: chalk.black.bold.bgGreen,
   [WordleFlag.MISPOSITION]: chalk.black.bold.bgYellow,
   [WordleFlag.WRONG]: chalk.black.bold.bgWhite,
@@ -79,14 +74,14 @@ export default class Wordle extends Command {
   static description = "an interesting word guessing game.";
   static flags = {
     // print the current player's historical record
-    history: flags.string({
+    history: flags.boolean({
       char: "h",
       description: "print the current player's historical record",
     }),
   };
   static args = [];
 
-  evaluations: WordleChar[][] = creactEvaluations();
+  evaluations: (WordleChar[] | null)[] = Array.from({ length: 6 }, () => null);
 
   initData(): WordleData {
     return {
@@ -102,23 +97,31 @@ export default class Wordle extends Command {
     console.clear();
     console.log(chalk.yellow.bgGray("       WORDLE      \n"));
     this.evaluations.forEach((line) => {
-      const lineString = line
-        .map((item) => flagToColor[item.flag](` ${item.char.trim() || "□"} `))
-        .join(" ");
+      const lineString =
+        line
+          ?.map((item) =>
+            flagToColor[item.flag](` ${item.char.trim() || "□"} `)
+          )
+          .join(" ") ?? Array.from({ length: 5 }, () => ` □ `).join(" ");
       console.log(lineString + "\n");
     });
+  }
+
+  zipEvaluations() {
+    return this.evaluations.map(
+      (line) =>
+        line?.map((item) => `${item.char}${item.flag}`).join(",") ?? null
+    );
   }
 
   saveEvaluations(wordleData: WordleData) {
     const { history } = wordleData;
     const today = new Date();
-    history.push(today.getTime());
+    history.push([today.getTime(), this.zipEvaluations()]);
     setCommandData("wordle", {
       lastPassDate: today.getTime(),
       history,
-      lastEvaluations: this.evaluations.map((line) =>
-        line.map((item) => `${item.char}${item.flag}`)
-      ),
+      lastEvaluations: this.zipEvaluations(),
     });
   }
 
@@ -162,17 +165,19 @@ export default class Wordle extends Command {
     console.log(chalk.green("🤔 Maybe try again?\n"));
   }
 
-  loadFromLastEvaluation(last: string[][]) {
-    this.evaluations = last.map((line) =>
-      line.map<WordleChar>((item) => {
-        // item: {char}{flag}
-        const [char, flag] = item;
-        return {
-          char,
-          flag: flag as WordleFlag,
-        };
-      })
-    );
+  loadFromLastEvaluation(last: (string | null)[]) {
+    this.evaluations = last.map((line) => {
+      return (
+        line?.split(",").map<WordleChar>((item) => {
+          // item: {char}{flag}
+          const [char, flag] = item;
+          return {
+            char,
+            flag: flag as WordleFlag,
+          };
+        }) ?? null
+      );
+    });
   }
 
   public async run(): Promise<void> {
