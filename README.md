@@ -42,7 +42,7 @@ $ npm install -g @slackoff/meditate
 $ med COMMAND
 running command...
 $ med (-v|--version|version)
-@slackoff/meditate/1.0.15 darwin-x64 node-v16.13.1
+@slackoff/meditate/1.1.0-alpha1 darwin-x64 node-v14.18.2
 $ med --help [COMMAND]
 USAGE
   $ med COMMAND
@@ -54,6 +54,7 @@ USAGE
 * [`med book [FILEPATH]`](#med-book-filepath)
 * [`med help [COMMAND]`](#med-help-command)
 * [`med init`](#med-init)
+* [`med wordle`](#med-wordle)
 
 ## `med book [FILEPATH]`
 
@@ -70,7 +71,7 @@ OPTIONS
   -s, --search=search  open searching view to locate given words.
 ```
 
-_See code: [src/commands/book.ts](https://github.com/ShenQingchuan/meditate/blob/v1.0.15/src/commands/book.ts)_
+_See code: [src/commands/book/index.ts](https://github.com/ShenQingchuan/meditate/blob/v1.1.0-alpha1/src/commands/book/index.ts)_
 
 ## `med help [COMMAND]`
 
@@ -101,5 +102,19 @@ OPTIONS
   -h, --help  show CLI help
 ```
 
-_See code: [src/commands/init.ts](https://github.com/ShenQingchuan/meditate/blob/v1.0.15/src/commands/init.ts)_
+_See code: [src/commands/init/index.ts](https://github.com/ShenQingchuan/meditate/blob/v1.1.0-alpha1/src/commands/init/index.ts)_
+
+## `med wordle`
+
+an interesting word guessing game.
+
+```
+USAGE
+  $ med wordle
+
+OPTIONS
+  -h, --history=history  print the current player's historical record
+```
+
+_See code: [src/commands/wordle/index.ts](https://github.com/ShenQingchuan/meditate/blob/v1.1.0-alpha1/src/commands/wordle/index.ts)_
 <!-- commandsstop -->

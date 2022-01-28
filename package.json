@@ -1,7 +1,7 @@
 {
   "name": "@slackoff/meditate",
   "description": "A powerful slack-off CLI application.",
-  "version": "1.0.15",
+  "version": "1.1.0-alpha1",
   "author": "ShenQingchuan",
   "bin": {
     "med": "./bin/run"
@@ -12,8 +12,11 @@
     "@oclif/config": "^1.17.0",
     "@oclif/plugin-help": "^3.2.4",
     "chalk": "^4.1.2",
+    "dayjs": "^1.10.7",
     "lodash": "^4.17.21",
     "ora": "^5.4.1",
+    "random-word-by-length": "^0.1.0",
+    "random-words": "^1.1.2",
     "readline-sync": "^1.4.10",
     "tslib": "^1.14.1"
   },
@@ -23,6 +26,7 @@
     "@types/chai": "^4.2.22",
     "@types/mocha": "^9.0.0",
     "@types/node": "^16.11.7",
+    "@types/random-words": "^1.1.2",
     "@types/readline-sync": "^1.4.4",
     "@typescript-eslint/eslint-plugin": "^5.3.1",
     "chai": "^4.3.4",
@@ -52,7 +56,11 @@
     "bin": "med",
     "plugins": [
       "@oclif/plugin-help"
-    ]
+    ],
+    "topics": {
+      "book": {},
+      "wordle": {}
+    }
   },
   "repository": "ShenQingchuan/meditate",
   "scripts": {
