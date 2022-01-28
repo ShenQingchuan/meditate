@@ -1,4 +1,4 @@
-import { ChinesePuncRegExp } from '../constants';
+import { ChinesePuncRegExp } from "../constants";
 
 export function wrapByTerminalWidth(str: string, width: number): string[] {
   const slices: string[] = [];

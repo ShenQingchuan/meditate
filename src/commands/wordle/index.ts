@@ -12,7 +12,7 @@ dayjs.extend(relativeTime);
 const printAlreadyPassedInfo = (next: Dayjs) => {
   console.log(
     `\n🎉 ${chalk.green("You've already passed today!")}\n` +
-      "next wordle will be post at " +
+      "next wordle will be posted at " +
       next.fromNow() +
       " later.\n"
   );

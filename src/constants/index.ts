@@ -1,2 +1,2 @@
-export * from './regexp';
-export * from './wordle-words';
+export * from "./regexp";
+export * from "./wordle-words";

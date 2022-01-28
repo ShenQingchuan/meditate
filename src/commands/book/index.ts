@@ -69,7 +69,7 @@ export default class Book extends Command {
       description: "help information for book reading command.",
     }),
     restart: flags.boolean({
-      char: 'r',
+      char: "r",
       description: "restart reading progress of a given book.",
     }),
     search: flags.string({
@@ -133,7 +133,7 @@ export default class Book extends Command {
       setCommandData("book", {
         ...bookData,
       });
-    }
+    };
 
     do {
       // clear screen before printing lines from book content
@@ -302,7 +302,7 @@ export default class Book extends Command {
       // pre line wrap contents
       this.preLineWrap();
 
-      let bookName = filepath.split("/").pop() || 'Unknown book';
+      let bookName = filepath.split("/").pop() || "Unknown book";
       this.ctx.bookName = bookName;
       if (bookName?.endsWith(".txt")) {
         bookName = bookName.slice(0, bookName.length - 4);
@@ -317,9 +317,11 @@ export default class Book extends Command {
       }
     } catch (err) {
       console.clear();
-      this.error(`${chalk.red('Panicked during reading book:')} ${
-        (err as Error).stack || err
-      }`);
+      this.error(
+        `${chalk.red("Panicked during reading book:")} ${
+          (err as Error).stack || err
+        }`
+      );
     }
   }
 }

@@ -1,5 +1,4 @@
-meditate
-========
+# meditate
 
 a powerful slack-off CLI application.
 
@@ -15,12 +14,12 @@ a powerful slack-off CLI application.
 ## Reading book
 
 **Read view**
+
 ```
 med ~/Downloads/天才基本法.txt
 ```
 
 ![read view](https://user-images.githubusercontent.com/46062972/150922709-00989370-f025-4c89-beaf-fb041c50f21b.png)
-
 
 **Search view**
 
@@ -31,12 +30,17 @@ med ~/Downloads/天才基本法.txt
 ![search view](https://user-images.githubusercontent.com/46062972/150922533-9d76b830-55c3-4c2f-8eed-e87916ad3777.png)
 
 <!-- toc -->
-* [Preview](#preview)
-* [Usage](#usage)
-* [Commands](#commands)
+
+- [meditate](#meditate)
+- [Preview](#preview)
+- [Usage](#usage)
+- [Commands](#commands)
 <!-- tocstop -->
+
 # Usage
+
 <!-- usage -->
+
 ```sh-session
 $ npm install -g @slackoff/meditate
 $ med COMMAND
@@ -48,13 +52,17 @@ USAGE
   $ med COMMAND
 ...
 ```
+
 <!-- usagestop -->
+
 # Commands
+
 <!-- commands -->
-* [`med book [FILEPATH]`](#med-book-filepath)
-* [`med help [COMMAND]`](#med-help-command)
-* [`med init`](#med-init)
-* [`med wordle`](#med-wordle)
+
+- [`med book [FILEPATH]`](#med-book-filepath)
+- [`med help [COMMAND]`](#med-help-command)
+- [`med init`](#med-init)
+- [`med wordle`](#med-wordle)
 
 ## `med book [FILEPATH]`
 
@@ -117,4 +125,5 @@ OPTIONS
 ```
 
 _See code: [src/commands/wordle/index.ts](https://github.com/ShenQingchuan/meditate/blob/v1.1.0-alpha1/src/commands/wordle/index.ts)_
+
 <!-- commandsstop -->

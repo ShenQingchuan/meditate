@@ -3,7 +3,7 @@ import {
   readFileSync as fsReadFileSync,
   writeFileSync as fsWriteFileSync,
   existsSync as fsExistsSync,
-  mkdirSync as fsMkdirSync
+  mkdirSync as fsMkdirSync,
 } from "fs";
 import type { CommandDataMap } from "../types";
 
@@ -16,8 +16,8 @@ export function initMedHomeDir(quite = false, callback?: () => void) {
   const homeDir = getMedHomeDir();
   let dataDir = `${homeDir}/data`;
   const printMessage = (msg: string) => {
-    !quite && console.log(msg)
-  }
+    !quite && console.log(msg);
+  };
 
   // guard for home directory
   const isMedHomeExists = fsExistsSync(homeDir);
@@ -46,10 +46,8 @@ export function loadCommandData<K extends keyof CommandDataMap>(
   cmd: K,
   init?: () => any // run init if command data is undefined
 ): CommandDataMap[K] {
-  const dataFilePath = pathResolve(
-    `${getMedHomeDir()}/data`, `${cmd}.json`
-  );
-  let dataString = '{}';
+  const dataFilePath = pathResolve(`${getMedHomeDir()}/data`, `${cmd}.json`);
+  let dataString = "{}";
   try {
     const dataBuffer = fsReadFileSync(dataFilePath);
     dataString = dataBuffer.toString();
