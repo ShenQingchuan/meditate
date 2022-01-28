@@ -18,8 +18,8 @@ dayjs.extend(relativeTime);
 const printAlreadyPassedInfo = (next: Dayjs) => {
   console.log(
     `\n🎉 ${chalk.green("You've already passed today!")}\n` +
-      "next wordle will be posted at " +
-      next.fromNow() +
+      "next wordle will be posted " +
+      chalk.yellow(next.fromNow()) +
       " later.\n"
   );
 };
@@ -35,7 +35,7 @@ const getWordOfTheDay = () => {
 };
 const creactEvaluations = () =>
   Array.from({ length: 6 }, () =>
-    Array.from({ length: 5 }, () => ({ char: "", flag: WordleFlag.NONE }))
+    Array.from({ length: 5 }, () => ({ char: " ", flag: WordleFlag.NONE }))
   );
 
 const computeWordleFlags = (input: string, answer: string) =>
@@ -104,7 +104,7 @@ export default class Wordle extends Command {
     console.log(chalk.yellow.bgGray("       WORDLE      \n"));
     this.evaluations.forEach((line) => {
       const lineString = line
-        .map((item) => flagToColor[item.flag](` ${item.char || "□"} `))
+        .map((item) => flagToColor[item.flag](` ${item.char.trim() || "□"} `))
         .join(" ");
       console.log(lineString + "\n");
     });
@@ -117,7 +117,9 @@ export default class Wordle extends Command {
     setCommandData("wordle", {
       lastPassDate: today.getTime(),
       history,
-      lastEvaluations: this.evaluations,
+      lastEvaluations: this.evaluations.map((line) =>
+        line.map((item) => `${item.char}${item.flag}`)
+      ),
     });
   }
 
@@ -135,7 +137,9 @@ export default class Wordle extends Command {
         this.printResultView();
         input = question(chalk.cyan(`${alertMsg}\ninput your answer: `));
         if (!validWordleGuessRegExp.test(input)) {
-          alertMsg = chalk.redBright("Answer is supposed to contain 5 letters only");
+          alertMsg = chalk.redBright(
+            "Answer is supposed to contain 5 letters only"
+          );
         } else if (!allWords.includes(input)) {
           alertMsg = chalk.redBright("Not in the word list.");
         } else if (input.length < 5) {
@@ -159,6 +163,19 @@ export default class Wordle extends Command {
     console.log(chalk.green("🤔 Maybe try again?\n"));
   }
 
+  loadFromLastEvaluation(last: string[][]) {
+    this.evaluations = last.map((line) =>
+      line.map<WordleChar>((item) => {
+        // item: {char}{flag}
+        const [char, flag] = item;
+        return {
+          char,
+          flag: flag as WordleFlag,
+        };
+      })
+    );
+  }
+
   public async run(): Promise<void> {
     const { flags } = await this.parse(Wordle);
 
@@ -175,9 +192,11 @@ export default class Wordle extends Command {
       // if player has already passed today
       const passed = lastPassDate && now.isSame(lastPassDate, "day");
       if (passed) {
-        this.evaluations = wordleData.lastEvaluations!;
-        this.printResultView();
-        printAlreadyPassedInfo(next);
+        if (wordleData.lastEvaluations) {
+          this.loadFromLastEvaluation(wordleData.lastEvaluations);
+          this.printResultView();
+          printAlreadyPassedInfo(next);
+        }
         this.exit();
       }
 

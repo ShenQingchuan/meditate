@@ -12984,8 +12984,8 @@ export const narrowViewWarn = chalk.yellow(
 );
 
 export enum WordleFlag {
-  NONE,
-  RIGHT,
-  MISPOSITION,
-  WRONG,
+  NONE = '1',
+  RIGHT = '2',
+  MISPOSITION = '3',
+  WRONG = '4',
 }

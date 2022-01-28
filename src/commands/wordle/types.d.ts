@@ -4,6 +4,6 @@ export interface WordleChar {
 }
 export interface WordleData {
   lastPassDate?: number;
-  lastEvaluations?: WordleChar[][];
+  lastEvaluations?: string[][];
   history: number[];
 }
