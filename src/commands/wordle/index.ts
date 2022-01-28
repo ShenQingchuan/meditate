@@ -50,9 +50,9 @@ const computeWordleFlags = (input: string, answer: string) =>
     };
   });
 const flagToColor = {
-  [WordleFlag.RIGHT]: chalk.black.bold.bgGreen,
-  [WordleFlag.MISPOSITION]: chalk.black.bold.bgYellow,
-  [WordleFlag.WRONG]: chalk.black.bold.bgWhite,
+  [WordleFlag.RIGHT]: chalk.white.bold.bgGreen,
+  [WordleFlag.MISPOSITION]: chalk.white.bold.bgYellow,
+  [WordleFlag.WRONG]: chalk.white.bold.bgGray,
 };
 
 /** ### What is Wordle ?
@@ -95,7 +95,7 @@ export default class Wordle extends Command {
 
   printResultView() {
     console.clear();
-    console.log(chalk.yellow.bgGray("       WORDLE      \n"));
+    console.log(chalk.white.bold.bgGray("       WORDLE      \n"));
     this.evaluations.forEach((line) => {
       const lineString =
         line
