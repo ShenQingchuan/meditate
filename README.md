@@ -35,39 +35,35 @@ med ~/Downloads/天才基本法.txt
 
 
 <!-- toc -->
-
-- [meditate](#meditate)
-- [Preview](#preview)
-- [Usage](#usage)
-- [Commands](#commands)
+* [meditate](#meditate)
+* [Preview](#preview)
+* [Usage](#usage)
+* [Commands](#commands)
 <!-- tocstop -->
 
 # Usage
 
 <!-- usage -->
-
 ```sh-session
 $ npm install -g @slackoff/meditate
 $ med COMMAND
 running command...
 $ med (-v|--version|version)
-@slackoff/meditate/1.1.0-alpha1 darwin-x64 node-v14.18.2
+@slackoff/meditate/1.1.0-alpha2 darwin-x64 node-v16.13.1
 $ med --help [COMMAND]
 USAGE
   $ med COMMAND
 ...
 ```
-
 <!-- usagestop -->
 
 # Commands
 
 <!-- commands -->
-
-- [`med book [FILEPATH]`](#med-book-filepath)
-- [`med help [COMMAND]`](#med-help-command)
-- [`med init`](#med-init)
-- [`med wordle`](#med-wordle)
+* [`med book [FILEPATH]`](#med-book-filepath)
+* [`med help [COMMAND]`](#med-help-command)
+* [`med init`](#med-init)
+* [`med wordle`](#med-wordle)
 
 ## `med book [FILEPATH]`
 
@@ -84,7 +80,7 @@ OPTIONS
   -s, --search=search  open searching view to locate given words.
 ```
 
-_See code: [src/commands/book/index.ts](https://github.com/ShenQingchuan/meditate/blob/v1.1.0-alpha1/src/commands/book/index.ts)_
+_See code: [src/commands/book.ts](https://github.com/ShenQingchuan/meditate/blob/v1.1.0-alpha2/src/commands/book.ts)_
 
 ## `med help [COMMAND]`
 
@@ -115,7 +111,7 @@ OPTIONS
   -h, --help  show CLI help
 ```
 
-_See code: [src/commands/init/index.ts](https://github.com/ShenQingchuan/meditate/blob/v1.1.0-alpha1/src/commands/init/index.ts)_
+_See code: [src/commands/init.ts](https://github.com/ShenQingchuan/meditate/blob/v1.1.0-alpha2/src/commands/init.ts)_
 
 ## `med wordle`
 
@@ -126,9 +122,8 @@ USAGE
   $ med wordle
 
 OPTIONS
-  -h, --history=history  print the current player's historical record
+  -h, --history  print the current player's historical record
 ```
 
-_See code: [src/commands/wordle/index.ts](https://github.com/ShenQingchuan/meditate/blob/v1.1.0-alpha1/src/commands/wordle/index.ts)_
-
+_See code: [src/commands/wordle/index.ts](https://github.com/ShenQingchuan/meditate/blob/v1.1.0-alpha2/src/commands/wordle/index.ts)_
 <!-- commandsstop -->
