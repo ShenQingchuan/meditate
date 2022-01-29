@@ -12988,3 +12988,5 @@ export enum WordleFlag {
   MISPOSITION = "2",
   WRONG = "3",
 }
+
+export const HistoryKeyDayFormat = 'YYYY-MM-DD';

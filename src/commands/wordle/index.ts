@@ -6,11 +6,13 @@ import { question } from "readline-sync";
 import {
   allWords,
   answers,
+  HistoryKeyDayFormat,
   narrowViewWarn,
   validWordleGuessRegExp,
   WordleFlag,
 } from "../../constants";
 import { loadCommandData, setCommandData } from "../../utils";
+import { Calterm } from "../../utils/calterm";
 
 dayjs.extend(relativeTime);
 
@@ -76,7 +78,7 @@ export default class Wordle extends Command {
     // print the current player's historical record
     history: flags.boolean({
       char: "h",
-      description: "print the current player's historical record",
+      description: "print current month's game record",
     }),
   };
   static args = [];
@@ -90,7 +92,20 @@ export default class Wordle extends Command {
   }
 
   openHistoryView(wordleData: WordleData) {
-    // todo...
+    new Calterm().print((str, day) => {
+      const passMap = new Map(
+        wordleData.history.map(([key, val]) => [
+          key,
+          this.unzipEvaluations(val),
+        ])
+      );
+      const isPassed = passMap.has(day.format(HistoryKeyDayFormat));
+      if (isPassed) {
+        return chalk.bgGreen(str);
+      }
+
+      return str;
+    });
   }
 
   printResultView() {
@@ -116,10 +131,10 @@ export default class Wordle extends Command {
 
   saveEvaluations(wordleData: WordleData) {
     const { history } = wordleData;
-    const today = new Date();
-    history.push([today.getTime(), this.zipEvaluations()]);
+    const today = dayjs();
+    history.push([today.format(HistoryKeyDayFormat), this.zipEvaluations()]);
     setCommandData("wordle", {
-      lastPassDate: today.getTime(),
+      lastPassDate: today.valueOf(),
       history,
       lastEvaluations: this.zipEvaluations(),
     });
@@ -165,8 +180,8 @@ export default class Wordle extends Command {
     console.log(chalk.green("🤔 Maybe try again?\n"));
   }
 
-  loadFromLastEvaluation(last: (string | null)[]) {
-    this.evaluations = last.map((line) => {
+  unzipEvaluations(last: (string | null)[]) {
+    return last.map((line) => {
       return (
         line?.split(",").map<WordleChar>((item) => {
           // item: {char}{flag}
@@ -197,7 +212,7 @@ export default class Wordle extends Command {
       const passed = lastPassDate && now.isSame(lastPassDate, "day");
       if (passed) {
         if (wordleData.lastEvaluations) {
-          this.loadFromLastEvaluation(wordleData.lastEvaluations);
+          this.evaluations = this.unzipEvaluations(wordleData.lastEvaluations);
           this.printResultView();
           printAlreadyPassedInfo(next);
         }
