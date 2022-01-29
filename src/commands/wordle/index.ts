@@ -2,14 +2,17 @@ import { Command, flags } from "@oclif/command";
 import chalk from "chalk";
 import dayjs, { Dayjs } from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { question } from "readline-sync";
+import { keyIn, question } from "readline-sync";
+import { json } from "stream/consumers";
 import {
   allWords,
   answers,
   HistoryKeyDayFormat,
+  HistoryCalendarViewKeyTips,
   narrowViewWarn,
   validWordleGuessRegExp,
   WordleFlag,
+  flagToColor,
 } from "../../constants";
 import { loadCommandData, setCommandData } from "../../utils";
 import { Calterm } from "../../utils/calterm";
@@ -34,27 +37,87 @@ const getWordOfTheDay = () => {
   }
   return answers[day];
 };
+const computeWordleFlags = (input: string, answer: string) => {
+  const charFoundCount: Record<string, number> = {};
+  Array.from(answer).forEach((char) => {
+    const foundCount = charFoundCount[char];
+    charFoundCount[char] = foundCount ? foundCount + 1 : 1;
+  });
 
-const computeWordleFlags = (input: string, answer: string) =>
-  input.split("").map<WordleChar>((char, i) => {
-    // input and answer are all 5 letters
-    const correctChar = answer[i];
-
-    const flag =
-      char === correctChar
-        ? WordleFlag.RIGHT
-        : !answer.includes(char)
-        ? WordleFlag.WRONG
-        : WordleFlag.MISPOSITION;
+  const result = Array.from(input).map<WordleChar>((char) => {
     return {
       char,
-      flag,
+      flag: WordleFlag.ABSENT,
     };
   });
-const flagToColor = {
-  [WordleFlag.RIGHT]: chalk.white.bold.bgGreen,
-  [WordleFlag.MISPOSITION]: chalk.white.bold.bgYellow,
-  [WordleFlag.WRONG]: chalk.white.bold.bgGray,
+
+  // mark up all correct
+  result.forEach((wc, i) => {
+    if (wc.char === answer[i]) {
+      wc.flag = WordleFlag.CORRECT;
+      charFoundCount[wc.char] -= 1;
+    }
+  });
+
+  // mark up all present
+  result.forEach((wc) => {
+    if (
+      wc.flag !== WordleFlag.CORRECT &&
+      answer.includes(wc.char) &&
+      charFoundCount[wc.char] > 0
+    ) {
+      wc.flag = WordleFlag.PRESENT;
+    }
+  });
+
+  return result;
+};
+const printEvaluationsView = (
+  evaluations: (WordleChar[] | null)[],
+  title = "  WORDLE  "
+) => {
+  console.clear();
+  console.log(chalk.white.bold.bgGray(`     ${title}    \n`));
+  evaluations.forEach((line) => {
+    const lineString =
+      line
+        ?.map((item) => flagToColor[item.flag](` ${item.char.trim() || "□"} `))
+        .join(" ") ?? Array.from({ length: 5 }, () => ` □ `).join(" ");
+    console.log(lineString + "\n");
+  });
+};
+const isAfterThisMonth = (base: Dayjs, next: Dayjs) =>
+  next.isAfter(base.startOf("month").add(1, "month"));
+const isBeforeThisMonth = (base: Dayjs, next: Dayjs) =>
+  next.isBefore(base.startOf("month"));
+const handleHistoryViewCursorMove: Record<
+  "j" | "k" | "h" | "l",
+  (day: Dayjs) => Dayjs | void
+> = {
+  j: (base: Dayjs) => {
+    const next = base.add(7, "days");
+    if (!isAfterThisMonth(base, next)) {
+      return next;
+    }
+  },
+  k: (base: Dayjs) => {
+    const next = base.subtract(7, "days");
+    if (!isBeforeThisMonth(base, next)) {
+      return next;
+    }
+  },
+  h: (base: Dayjs) => {
+    const next = base.subtract(1, "day");
+    if (!isBeforeThisMonth(base, next)) {
+      return next;
+    }
+  },
+  l: (base: Dayjs) => {
+    const next = base.add(1, "day");
+    if (!isAfterThisMonth(base, next)) {
+      return next;
+    }
+  },
 };
 
 /** ### What is Wordle ?
@@ -91,42 +154,83 @@ export default class Wordle extends Command {
     };
   }
 
-  openHistoryView(wordleData: WordleData) {
-    new Calterm().print((str, day) => {
-      const passMap = new Map(
-        wordleData.history.map(([key, val]) => [
-          key,
-          this.unzipEvaluations(val),
-        ])
-      );
-      const isPassed = passMap.has(day.format(HistoryKeyDayFormat));
-      if (isPassed) {
-        return chalk.bgGreen(str);
-      }
-
-      return str;
-    });
-  }
-
-  printResultView() {
-    console.clear();
-    console.log(chalk.white.bold.bgGray("       WORDLE      \n"));
-    this.evaluations.forEach((line) => {
-      const lineString =
-        line
-          ?.map((item) =>
-            flagToColor[item.flag](` ${item.char.trim() || "□"} `)
-          )
-          .join(" ") ?? Array.from({ length: 5 }, () => ` □ `).join(" ");
-      console.log(lineString + "\n");
-    });
-  }
-
   zipEvaluations() {
     return this.evaluations.map(
       (line) =>
         line?.map((item) => `${item.char}${item.flag}`).join(",") ?? null
     );
+  }
+
+  openHistoryView(wordleData: WordleData) {
+    // handle operations for toggle rendering history evaluations record
+    // - calendar view: when displaying the calendar
+    // - evaluations view: when displaying the evaluations of one day
+    this.delegateCalendarView(wordleData);
+  }
+
+  deserializeEvaluations(wordleData: WordleData) {
+    return new Map(
+      wordleData.history.map(([key, val]) => [key, this.unzipEvaluations(val)])
+    );
+  }
+
+  delegateCalendarView(wordleData: WordleData) {
+    console.clear();
+    const currentMonthCalterm = new Calterm();
+    let selectDay = dayjs(); // default to today
+
+    while (true) {
+      console.log(chalk.white.bold.bgGray("   WORDLE MONTHLY   "));
+      currentMonthCalterm.print((str, day) => {
+        const deserializedEvaluationsMap =
+          this.deserializeEvaluations(wordleData);
+        const isPassed = deserializedEvaluationsMap.has(
+          day.format(HistoryKeyDayFormat)
+        );
+        if (isPassed) {
+          str = chalk.bold.green(str);
+        }
+        if (day.isSame(selectDay, "day")) {
+          str = chalk.bgGray(str);
+        }
+
+        return str;
+      });
+
+      console.log(chalk.yellow(HistoryCalendarViewKeyTips));
+      const calendarViewKeyIn = keyIn("", { limit: "jkhloq" });
+      console.clear();
+      switch (calendarViewKeyIn) {
+        case "q":
+          this.exit();
+        case "j":
+        case "k":
+        case "h":
+        case "l":
+          const nextSelect =
+            handleHistoryViewCursorMove[calendarViewKeyIn](selectDay);
+          if (nextSelect) {
+            selectDay = nextSelect;
+          }
+          break;
+        case "o":
+          this.delegateEvaluationsView(wordleData, selectDay);
+      }
+    }
+  }
+
+  delegateEvaluationsView(wordleData: WordleData, selectDay: Dayjs) {
+    const deserializedEvaluationsMap = this.deserializeEvaluations(wordleData);
+    const evaluations = deserializedEvaluationsMap.get(
+      selectDay.format(HistoryKeyDayFormat)
+    );
+    if (evaluations) {
+      console.clear();
+      printEvaluationsView(evaluations, selectDay.format(HistoryKeyDayFormat));
+      console.log(chalk.yellow("[q] - go back to calendar view"));
+      keyIn("", { limit: "q" });
+      console.clear();
+    }
   }
 
   saveEvaluations(wordleData: WordleData) {
@@ -151,7 +255,7 @@ export default class Wordle extends Command {
         alertMsg = process.stdout.rows < 16 ? narrowViewWarn : "";
 
       do {
-        this.printResultView();
+        printEvaluationsView(this.evaluations);
         input = question(chalk.cyan(`${alertMsg}\ninput your answer: `));
         if (!validWordleGuessRegExp.test(input)) {
           alertMsg = chalk.redBright(
@@ -170,13 +274,13 @@ export default class Wordle extends Command {
       if (input !== answer) {
         round++;
       } else {
-        this.printResultView();
+        printEvaluationsView(this.evaluations);
         console.log(chalk.green("🎉 Congratulations!\n"));
         this.saveEvaluations(wordleData);
         this.exit();
       }
     }
-    this.printResultView(); // after `round` is assigned to 6
+    printEvaluationsView(this.evaluations); // after `round` is assigned to 6
     console.log(chalk.green("🤔 Maybe try again?\n"));
   }
 
@@ -213,7 +317,7 @@ export default class Wordle extends Command {
       if (passed) {
         if (wordleData.lastEvaluations) {
           this.evaluations = this.unzipEvaluations(wordleData.lastEvaluations);
-          this.printResultView();
+          printEvaluationsView(this.evaluations);
           printAlreadyPassedInfo(next);
         }
         this.exit();

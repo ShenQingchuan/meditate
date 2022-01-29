@@ -45,7 +45,7 @@ export class Calterm {
     for (let day = 1; day <= this.getDaysInMonth(); day++) {
       let item = `${day}`.padStart(2, " ");
       if (day === today) {
-        item = chalk.red(item);
+        item = chalk.underline(item);
       }
       if (customizeDay) {
         item = customizeDay(

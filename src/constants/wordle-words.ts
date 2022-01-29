@@ -12984,9 +12984,19 @@ export const narrowViewWarn = chalk.yellow(
 );
 
 export enum WordleFlag {
-  RIGHT = "1",
-  MISPOSITION = "2",
-  WRONG = "3",
+  CORRECT = "1",
+  PRESENT = "2",
+  ABSENT = "3",
 }
 
-export const HistoryKeyDayFormat = 'YYYY-MM-DD';
+export const flagToColor = {
+  [WordleFlag.CORRECT]: chalk.white.bold.bgGreen,
+  [WordleFlag.PRESENT]: chalk.white.bold.bgYellow,
+  [WordleFlag.ABSENT]: chalk.white.bold.bgGray,
+};
+
+export const HistoryKeyDayFormat = "YYYY-MM-DD";
+export const HistoryCalendarViewKeyTips =
+  "\n[j,k,h,l] - move cursor to select one day\n" +
+  "[o] - open evaluations record\n" +
+  "[q] - quit history calendar view\n";
