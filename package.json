@@ -1,6 +1,6 @@
 {
   "name": "@slackoff/meditate",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "description": "a Node.js CLI application for fun.",
   "author": "ShenQingchuan",
   "bin": {
@@ -58,15 +58,9 @@
     "dirname": "med",
     "commands": "./dist/commands",
     "plugins": [
-      "@oclif/plugin-help",
-      "@oclif/plugin-plugins"
+      "@oclif/plugin-help"
     ],
-    "topicSeparator": " ",
-    "topics": {
-      "book": {},
-      "wordle": {},
-      "cnpoem": {}
-    }
+    "topicSeparator": " "
   },
   "scripts": {
     "build": "shx rm -rf dist && tsc -b",
