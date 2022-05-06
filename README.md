@@ -33,17 +33,18 @@ med ~/Downloads/天才基本法.txt
 
 ![Wordle game](https://user-images.githubusercontent.com/46062972/151534206-de70fdec-9960-4aae-be85-9333441a90b7.png)
 
+# Chinese poem · 一言
+
+![Chinese poem](https://user-images.githubusercontent.com/46062972/167068053-e5c36959-68cb-4a04-a1d6-1a598d9658c9.png)
+
+
 <!-- toc -->
 * [meditate](#meditate)
 * [Preview](#preview)
+* [Chinese poem · 一言](#chinese-poem--一言)
 * [Usage](#usage)
 * [Commands](#commands)
 <!-- tocstop -->
-* [meditate](#meditate)
-* [Preview](#preview)
-* [Usage](#usage)
-* * [meditate](#meditate)
-* [Preview](#pr
 # Usage
 
 <!-- usage -->
