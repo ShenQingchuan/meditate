@@ -1,0 +1,88 @@
+{
+  "name": "@slackoff/meditate",
+  "version": "1.2.0",
+  "description": "a Node.js CLI application for fun.",
+  "author": "ShenQingchuan",
+  "bin": {
+    "med": "./bin/run"
+  },
+  "homepage": "https://github.com/ShenQingchuan/meditate",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "repository": "ShenQingchuan/meditate",
+  "files": [
+    "/bin",
+    "/dist",
+    "/npm-shrinkwrap.json",
+    "/oclif.manifest.json"
+  ],
+  "dependencies": {
+    "@oclif/core": "^1",
+    "@oclif/plugin-help": "^5",
+    "@oclif/plugin-plugins": "^2.0.1",
+    "chalk": "^4.1.2",
+    "dayjs": "^1.10.7",
+    "node-fetch": "2",
+    "ora": "^5.4.1",
+    "random-word-by-length": "^0.1.0",
+    "random-words": "^1.1.2",
+    "readline-sync": "^1.4.10",
+    "text-table": "^0.2.0",
+    "underscore": "^1.13.3"
+  },
+  "devDependencies": {
+    "@oclif/test": "^2",
+    "@types/chai": "^4",
+    "@types/mocha": "^9.0.0",
+    "@types/node": "^16.9.4",
+    "@types/node-fetch": "2.x",
+    "@types/random-words": "^1.1.2",
+    "@types/readline-sync": "^1.4.4",
+    "@types/text-table": "^0.2.2",
+    "@types/underscore": "^1.11.4",
+    "chai": "^4",
+    "eslint": "^7.32.0",
+    "eslint-config-oclif": "^4",
+    "eslint-config-oclif-typescript": "^1.0.2",
+    "globby": "^11",
+    "mocha": "^9",
+    "oclif": "^3",
+    "prettier": "^2.6.2",
+    "shx": "^0.3.3",
+    "ts-node": "^10.2.1",
+    "tslib": "^2.3.1",
+    "typescript": "^4.4.3"
+  },
+  "oclif": {
+    "bin": "med",
+    "dirname": "med",
+    "commands": "./dist/commands",
+    "plugins": [
+      "@oclif/plugin-help",
+      "@oclif/plugin-plugins"
+    ],
+    "topicSeparator": " ",
+    "topics": {
+      "book": {},
+      "wordle": {},
+      "cnpoem": {}
+    }
+  },
+  "scripts": {
+    "build": "shx rm -rf dist && tsc -b",
+    "lint": "eslint . --ext .ts --config .eslintrc",
+    "postpack": "shx rm -f oclif.manifest.json",
+    "posttest": "yarn lint",
+    "prepack": "yarn build && oclif manifest && oclif readme && eslint . --fix",
+    "test": "mocha --forbid-only \"test/**/*.test.ts\"",
+    "version": "oclif readme && git add README.md"
+  },
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "bugs": "https://github.com/ShenQingchuan/meditate/issues",
+  "keywords": [
+    "oclif"
+  ],
+  "types": "dist/index.d.ts"
+}
