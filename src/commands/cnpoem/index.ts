@@ -65,7 +65,7 @@ export default class Cnpoem extends Command {
 `)
         this.log(`📖 Source：《${chalk.green(data.origin.title)}》 -- ${chalk.yellow(data.origin.dynasty)} · ${chalk.yellow(data.origin.author)}`)
         data.origin.translation && this.log(`🖊 ${chalk.gray(data.origin.translation.join('\n\t '))}`)
-        data.matchTags && this.log(`📌 ${chalk.cyan(data.matchTags.join('\n'))}`)
+        data.matchTags && this.log(`📌 ${chalk.cyan(data.matchTags.join('，'))}`)
       } else {
         this.log(
           `Poem sentence API Error: ${chalk.red(
