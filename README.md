@@ -16,7 +16,7 @@ a powerful slack-off CLI application.
 **Read view**
 
 ```
-med ~/Downloads/天才基本法.txt
+med book ~/Downloads/天才基本法.txt
 ```
 
 ![read view](https://user-images.githubusercontent.com/46062972/150922709-00989370-f025-4c89-beaf-fb041c50f21b.png)
