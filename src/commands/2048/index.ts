@@ -1,57 +1,18 @@
+/* eslint-disable max-statements-per-line */
 import {Command}  from '@oclif/core'
 import chalk from 'chalk'
+import {keyIn} from 'readline-sync'
 import {loadCommandData} from '../../utils'
-import {viewFooter, viewHeader} from './constants'
 
-interface MergePot {
-  value: number
-  isMerged: boolean
-}
+type MoveDirection = 'LEFT' | 'RIGHT' | 'UP' | 'DOWN';
+type GameStatus = 'WIN' | 'GOING' | 'END';
 
-function newGameBoard(): number[][] {
-  return Array.from({length: 4}, () => {
-    // NaN means this cell has not been used
-    return Array.from({length: 4}).fill(Number.NaN)
-  }) as number[][]
-}
-
-function newMergePot(value: number): MergePot {
-  return {
-    value,
-    isMerged: false,
-  }
-}
-
-function mergeForGroup(original: number[], isReversedTraverse = false): number[] {
-  if (isReversedTraverse) {
-    original = original.reverse()
-  }
-
-  let mergeStack: MergePot[] = []
-  // Build a stack struct for merging
-  for (const element of original) {
-    const mergeItem = newMergePot(element)
-    const stackTop = mergeStack[mergeStack.length - 1]
-    if (stackTop.value === mergeItem.value && !stackTop.isMerged) {
-      // This pot has not been merged, then merge with stack top
-      mergeItem.value *= 2
-      mergeStack.pop() // remove current top, waiting for the merged one
-    }
-
-    mergeStack.push(mergeItem)
-  }
-
-  // Should not reverse if original has already been reversed
-  if (!isReversedTraverse) {
-    // Reverse the result of `mergeStack` as stack-all-out
-    mergeStack = mergeStack.reverse()
-  }
-
-  return mergeStack.map(item => item.value)
-}
+const viewHeader = '————————————— 2048 Game ——————————————'
+const viewFooter = '————————————— Meditate ———————————————'
 
 export default class Game2048 extends Command {
   static GAME_BOARD_SIZE = 4
+  static WIN_VALUE = 2048
   static description = '2048 Game in terminal'
   static flags = {}
   static args = []
@@ -69,42 +30,224 @@ export default class Game2048 extends Command {
     2048: chalk.hex('#00bcd4'),
   }
 
-  gameBoard = newGameBoard()
+  // gameBoard = this.newGameBoard()
+  gameBoard = [
+    [2,  4,  8,  16],
+    [4,  8,  2,  8],
+    [2,  4,  2,  8],
+    [16, 2, 4, 16],
+  ]
+
+  score = 0
+  status: GameStatus = 'GOING'
 
   private initData = (): Game2048Data => {
     return {
       historyHighest: 0,
+      currentScore: 0,
     }
   }
 
-  getRandomPos = (): [number, number] => {
-    // Generate a integer of (0,4]
-    const randomX = Math.ceil(Math.random() * (Game2048.GAME_BOARD_SIZE - 1))
-    const randomY = Math.ceil(Math.random() * (Game2048.GAME_BOARD_SIZE - 1))
-    return [randomX, randomY]
+  newGameBoard(): number[][] {
+    return Array.from({length: 4}, () => {
+      // NaN means this cell has not been used
+      return Array.from({length: 4}).fill(Number.NaN)
+    }) as number[][]
   }
 
   initializeGameBoard = (): void => {
-    // Random pick two cells in board
-    // and generate '2' on those cells
-    const [startPointOneX, startPointOneY] = this.getRandomPos()
-    let [startPointTwoX, startPointTwoY] = this.getRandomPos()
-    while (
-      startPointTwoX === startPointOneX &&
-      startPointTwoY === startPointOneY
-    ) {
-      // if the second point is the same as the first one
-      // we should regenerate
-      [startPointTwoX, startPointTwoY] = this.getRandomPos()
+    // generate two start points (value is 2 or 4)
+    this.spawn().spawn()
+  }
+
+  private _inverse(gameBoard: number[][] = this.gameBoard): number[][] {
+    return gameBoard.map(row => [...row].reverse())
+  }
+
+  inverseGameBoard(): Game2048 {
+    this.gameBoard = this._inverse(this.gameBoard)
+    return this
+  }
+
+  private _transpose(gameBoard: number[][] = this.gameBoard): number[][] {
+    return gameBoard[0].map((_, i) => gameBoard.map(row => {
+      return row[i]
+    }))
+  }
+
+  transposeGameBoard(): Game2048 {
+    this.gameBoard = this._transpose(this.gameBoard)
+    return this
+  }
+
+  spawn(): Game2048 {
+    const newItemValue = Math.round(Math.random() * 100) > 89 ? 4 : 2
+    const availablePoints: [number, number][] = []
+    for (let i = 0; i < this.gameBoard.length; i++) {
+      for (let j = 0; j < this.gameBoard[i].length; j++) {
+        if (Number.isNaN(this.gameBoard[i][j])) {
+          availablePoints.push([i, j])
+        }
+      }
     }
 
-    this.gameBoard[startPointOneX][startPointOneY] = 2
-    this.gameBoard[startPointTwoX][startPointTwoY] = 2
+    if (availablePoints.length === 0) {
+      return this
+    }
+
+    const [pickedX, pickedY] = availablePoints[Math.floor(Math.random() * availablePoints.length)]
+    this.gameBoard[pickedX][pickedY] = newItemValue
+    return this
+  }
+
+  tighten(row: number[]): number[] {
+    const notNaNItems = row.filter(item => !Number.isNaN(item))
+    const newRow = [
+      ...notNaNItems,
+      ...Array.from<number>(
+        {length: row.length - notNaNItems.length},
+      ).fill(Number.NaN),
+    ]
+    return newRow
+  }
+
+  merge(row: number[]): number[] {
+    let isPair = false // two numbers equal
+    const newRow: number[] = []
+    for (let i = 0; i < row.length; i++) {
+      if (isPair) {
+        newRow.push(2 * row[i])
+        this.score += 2 * row[i]
+        isPair = false
+      } else if (i + 1 < row.length && row[i] === row[i + 1]) {
+        isPair = true
+        newRow.push(Number.NaN)
+      } else {
+        newRow.push(row[i])
+      }
+    }
+
+    if (newRow.length !== row.length) {
+      this.log(chalk.red('Error: Merge error occured'))
+      this.exit(-1)
+    }
+
+    return newRow
+  }
+
+  swipeForRow(): Game2048 {
+    for (let i = 0; i < this.gameBoard.length; i++) {
+      this.gameBoard[i] = this.tighten(
+        this.merge(
+          this.tighten(this.gameBoard[i]),
+        ),
+      )
+    }
+
+    return this
+  }
+
+  swipeLeft(): Game2048 {
+    this.swipeForRow().spawn()
+    return this
+  }
+
+  swipeRight(): Game2048 {
+    this.inverseGameBoard()
+    .swipeForRow()
+    .inverseGameBoard()
+    .spawn()
+    return this
+  }
+
+  swipeUp(): Game2048 {
+    this.transposeGameBoard()
+    .swipeLeft()
+    .transposeGameBoard()
+    .spawn()
+    return this
+  }
+
+  swipeDown(): Game2048 {
+    this.transposeGameBoard()
+    .swipeRight()
+    .transposeGameBoard()
+    .spawn()
+    return this
+  }
+
+  isRowsMovable(gameBoard: number[][]): boolean {
+    for (const row of gameBoard) {
+      for (let i = 0; i < row.length; i++) {
+        if (Number.isNaN(row[i]) && !Number.isNaN(row[i + 1])) return true // move
+        if (!Number.isNaN(row[i]) && row[i + 1] === row[i]) return true // merge
+      }
+    }
+
+    return false
+  }
+
+  isMovePossible(direction: MoveDirection): boolean {
+    let checkResult = false
+    switch (direction) {
+    case 'LEFT':
+      checkResult = this.isRowsMovable(this.gameBoard)
+      break
+    case 'RIGHT':
+      checkResult = this.isRowsMovable(this._inverse())
+      break
+    case 'UP':
+      checkResult = this.isRowsMovable(this._transpose())
+      break
+    case 'DOWN':
+      checkResult = this.isRowsMovable(this._inverse(this._transpose()))
+      break
+    }
+
+    return checkResult
+  }
+
+  isWin(): boolean {
+    for (const row of this.gameBoard) {
+      for (const item of row) {
+        if (!Number.isNaN(item) && item >= Game2048.WIN_VALUE) {
+          return true
+        }
+      }
+    }
+
+    return false
+  }
+
+  isGameOver = (): boolean => {
+    for (const direction of ['LEFT', 'RIGHT', 'UP', 'DOWN'] as MoveDirection[]) {
+      if (this.isMovePossible(direction)) {
+        return false
+      }
+    }
+
+    return true
+  }
+
+  isGameWillContinue(): boolean {
+    let isWillContinue = true
+    if (this.isWin()) {
+      console.log(chalk.yellow('🎉 You win!'))
+      this.status = 'WIN'
+      isWillContinue = false
+    } else if (this.isGameOver()) {
+      console.log(chalk.yellow('🤔 Game over!'))
+      this.status = 'END'
+      isWillContinue = false
+    }
+
+    return isWillContinue
   }
 
   printGameBoardView = (): void => {
     console.clear()
     console.log(chalk.cyan(viewHeader)) // Print header
+    console.log(`${chalk.blue('SCORE: ')} ${this.score}`) // Print scroe
 
     let linesString = ''
     for (let x = 0; x < this.gameBoard.length; x++) {
@@ -122,49 +265,6 @@ export default class Game2048 extends Command {
     console.log(chalk.cyan(viewFooter))
   }
 
-  // Tips: `this.gameBoard` is all lines
-
-  swipeLeft = (): void => {
-    // Take a horizontal perspective from right to left
-    // Traverse by lines
-    for (const [i, line] of this.gameBoard.entries()) {
-      this.gameBoard[i] = mergeForGroup(line, true)
-    }
-  }
-
-  swipeRight = (): void => {
-    // Take a horizontal perspective from left to right
-    // Traverse by lines
-    for (const [i, line] of this.gameBoard.entries()) {
-      this.gameBoard[i] = mergeForGroup(line)
-    }
-  }
-
-  swipeUp = (): void => {
-    // Take a vertical perspective from bottom to top
-    // Traverse by columns
-
-    // Todo
-  }
-
-  swipeDown = (): void => {
-    // Take a vertical perspective from top to bottom
-    // Traverse by columns
-
-    // Todo
-  }
-
-  isGameNotOver = (): boolean => {
-    if (this.gameBoard.some(group => group.includes(Number.NaN))) return true
-
-    // When a game is over, whatever direction the player wanna go for next step,
-    // the values on game board would never change
-
-    // Todo: implement checking for an available next step
-
-    return true
-  }
-
   public async run(): Promise<void> {
     // load command data
     const {historyHighest} = loadCommandData('2048', this.initData)
@@ -177,5 +277,25 @@ export default class Game2048 extends Command {
     this.initializeGameBoard()
 
     // Run the game loop!
+    try {
+      while (this.isGameWillContinue()) {
+        this.printGameBoardView()
+
+        const actionKey = keyIn('', {hideEchoBack: true, mask: '', limit: 'qrjkhl'})
+        switch (actionKey) {
+        case 'j': this.swipeDown(); break
+        case 'k': this.swipeUp(); break
+        case 'h': this.swipeLeft(); break
+        case 'l': this.swipeRight(); break
+        case 'q': {
+        // Todo: save game process if necessary
+          this.exit()
+          break
+        }
+        }
+      }
+    } catch (error) {
+      console.log(chalk.red(`2048 Error: ${error}`))
+    }
   }
 }

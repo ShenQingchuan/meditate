@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import textTable from 'text-table'
 import dayjs, {Dayjs} from 'dayjs'
-import _ from 'underscore'
+import _ from 'lodash'
 import chalk from 'chalk'
 
 export class Calterm {
@@ -67,8 +67,8 @@ export class Calterm {
       grid.unshift(' ')
     }
 
-    const weeks = _.chain(grid)
-    .groupBy((_, i) => Math.floor(i / 7))
+    const weeks = _.chain(grid.map((item, i) => [i, item] as [number, string]))
+    .groupBy(([i, _]) => Math.floor(i / 7))
     .toArray()
     .value()
     const calendar = textTable([daysAbbr, weeks], {
