@@ -37,6 +37,10 @@ med book ~/Downloads/天才基本法.txt
 
 ![Chinese poem](https://user-images.githubusercontent.com/46062972/167068053-e5c36959-68cb-4a04-a1d6-1a598d9658c9.png)
 
+# Game · 2048
+
+![game2048](https://user-images.githubusercontent.com/46062972/171021184-e6644620-515a-4652-bc30-50ebb8ec2b92.png)
+
 
 <!-- toc -->
 * [meditate](#meditate)
