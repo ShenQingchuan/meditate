@@ -45,7 +45,6 @@ med book ~/Downloads/天才基本法.txt
 <!-- toc -->
 * [meditate](#meditate)
 * [Preview](#preview)
-* [Chinese poem · 一言](#chinese-poem--一言)
 * [Usage](#usage)
 * [Commands](#commands)
 <!-- tocstop -->
