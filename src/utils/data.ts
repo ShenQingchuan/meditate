@@ -6,6 +6,7 @@ import {
   mkdirSync as fsMkdirSync,
 } from 'node:fs'
 import type {CommandDataMap} from '../types'
+import {isEmpty} from 'lodash'
 
 export function getMedHomeDir(): string {
   const userHomeDir = process.env.HOME || process.env.USERPROFILE || '~'
@@ -65,11 +66,14 @@ export function loadCommandData<K extends keyof CommandDataMap>(
   }
 
   try {
-    const dataJSON = JSON.parse(dataString)
-    const cmdData = dataJSON[cmd] ?? init?.()
+    let dataJSON = JSON.parse(dataString)
+    const cmdData = isEmpty(dataJSON) ? (init?.() ?? {}) : dataJSON
 
     // write in initialized data
-    dataJSON[cmd] = cmdData
+    dataJSON = {
+      ...dataJSON,
+      ...cmdData, // override
+    }
     fsWriteFileSync(dataFilePath, JSON.stringify(dataJSON))
 
     return cmdData
@@ -80,13 +84,16 @@ export function loadCommandData<K extends keyof CommandDataMap>(
 
 export function setCommandData<K extends keyof CommandDataMap>(
   cmd: K,
-  newData: CommandDataMap[K],
+  newData: Partial<CommandDataMap[K]>,
 ): void {
   const dataFilePath = pathResolve(`${getMedHomeDir()}/data`, `${cmd}.json`)
   const dataBuffer = fsReadFileSync(dataFilePath)
   try {
-    const dataJSON: CommandDataMap = JSON.parse(dataBuffer.toString())
-    dataJSON[cmd] = newData
+    let dataJSON = JSON.parse(dataBuffer.toString()) as CommandDataMap[K]
+    dataJSON = {
+      ...dataJSON,
+      ...newData, // override
+    }
     fsWriteFileSync(dataFilePath, JSON.stringify(dataJSON))
   } catch {
     throw new Error('load Meditate data failed!')

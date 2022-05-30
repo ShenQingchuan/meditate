@@ -33,3 +33,8 @@ export function terminalStringWidth(str: string): number {
 
   return count
 }
+
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export function padString(content: any, padLength: number): string {
+  return `${content}`.padStart(padLength, ' ').padEnd(padLength, ' ')
+}

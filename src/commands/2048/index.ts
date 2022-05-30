@@ -1,11 +1,9 @@
 /* eslint-disable max-statements-per-line */
 import {Command}  from '@oclif/core'
 import chalk from 'chalk'
+import {isUndefined} from 'lodash'
 import {keyIn} from 'readline-sync'
-import {loadCommandData} from '../../utils'
-
-type MoveDirection = 'LEFT' | 'RIGHT' | 'UP' | 'DOWN';
-type GameStatus = 'WIN' | 'GOING' | 'END';
+import {loadCommandData, padString, setCommandData} from '../../utils'
 
 const viewHeader = '————————————— 2048 Game ——————————————'
 const viewFooter = '————————————— Meditate ———————————————'
@@ -30,19 +28,15 @@ export default class Game2048 extends Command {
     2048: chalk.hex('#00bcd4'),
   }
 
-  // gameBoard = this.newGameBoard()
-  gameBoard = [
-    [2,  4,  8,  16],
-    [4,  8,  2,  8],
-    [2,  4,  2,  8],
-    [16, 2, 4, 16],
-  ]
+  gameBoard = this.newGameBoard()
 
   score = 0
-  status: GameStatus = 'GOING'
+  status: GameStatus = 'START'
+  preventSpawn = false;
 
   private initData = (): Game2048Data => {
     return {
+      status: 'START',
       historyHighest: 0,
       currentScore: 0,
     }
@@ -53,11 +47,6 @@ export default class Game2048 extends Command {
       // NaN means this cell has not been used
       return Array.from({length: 4}).fill(Number.NaN)
     }) as number[][]
-  }
-
-  initializeGameBoard = (): void => {
-    // generate two start points (value is 2 or 4)
-    this.spawn().spawn()
   }
 
   private _inverse(gameBoard: number[][] = this.gameBoard): number[][] {
@@ -119,7 +108,7 @@ export default class Game2048 extends Command {
         newRow.push(2 * row[i])
         this.score += 2 * row[i]
         isPair = false
-      } else if (i + 1 < row.length && row[i] === row[i + 1]) {
+      } else if (i + 1 <= row.length && row[i] === row[i + 1]) {
         isPair = true
         newRow.push(Number.NaN)
       } else {
@@ -148,7 +137,7 @@ export default class Game2048 extends Command {
   }
 
   swipeLeft(): Game2048 {
-    this.swipeForRow().spawn()
+    this.swipeForRow()
     return this
   }
 
@@ -156,7 +145,6 @@ export default class Game2048 extends Command {
     this.inverseGameBoard()
     .swipeForRow()
     .inverseGameBoard()
-    .spawn()
     return this
   }
 
@@ -164,7 +152,6 @@ export default class Game2048 extends Command {
     this.transposeGameBoard()
     .swipeLeft()
     .transposeGameBoard()
-    .spawn()
     return this
   }
 
@@ -172,7 +159,6 @@ export default class Game2048 extends Command {
     this.transposeGameBoard()
     .swipeRight()
     .transposeGameBoard()
-    .spawn()
     return this
   }
 
@@ -219,7 +205,7 @@ export default class Game2048 extends Command {
     return false
   }
 
-  isGameOver = (): boolean => {
+  isGameOver(): boolean {
     for (const direction of ['LEFT', 'RIGHT', 'UP', 'DOWN'] as MoveDirection[]) {
       if (this.isMovePossible(direction)) {
         return false
@@ -231,7 +217,9 @@ export default class Game2048 extends Command {
 
   isGameWillContinue(): boolean {
     let isWillContinue = true
-    if (this.isWin()) {
+    if (this.status === 'START') {
+      this.status = 'GOING'
+    } else if (this.isWin()) {
       console.log(chalk.yellow('🎉 You win!'))
       this.status = 'WIN'
       isWillContinue = false
@@ -244,7 +232,7 @@ export default class Game2048 extends Command {
     return isWillContinue
   }
 
-  printGameBoardView = (): void => {
+  printGameBoardView(): void {
     console.clear()
     console.log(chalk.cyan(viewHeader)) // Print header
     console.log(`${chalk.blue('SCORE: ')} ${this.score}`) // Print scroe
@@ -254,8 +242,12 @@ export default class Game2048 extends Command {
       linesString += '\t'
       for (let y = 0; y < this.gameBoard[x].length; y++) {
         const cellValue = this.gameBoard[x][y]
-        const cellColorChalk = Game2048.colorsMap[cellValue]
-        linesString += `  ${Number.isNaN(cellValue) ? chalk.white('.') : cellColorChalk(cellValue)}  `
+        const cellColorChalk = Game2048.colorsMap[cellValue] ?? chalk.white
+        linesString += ` ${
+          Number.isNaN(cellValue) ?
+            chalk.white(padString('.', 4)) :
+            cellColorChalk(padString(Number.isNaN(cellValue) ? '.' : cellValue, 4))
+        } `
       }
 
       linesString += '\n'
@@ -265,21 +257,63 @@ export default class Game2048 extends Command {
     console.log(chalk.cyan(viewFooter))
   }
 
+  gameEndStatistics(historyHighest: number): void {
+    // Game end (win or fail)
+    const finalData: Partial<Game2048Data> = {
+      currentScore: 0,
+      gameBoard: undefined,
+      status: 'START',
+    }
+    if (this.score > historyHighest) {
+      console.log(chalk.yellow('🔥 History highest!'))
+      finalData.historyHighest = this.score
+    }
+
+    setCommandData('2048', finalData)
+  }
+
   public async run(): Promise<void> {
     // load command data
-    const {historyHighest} = loadCommandData('2048', this.initData)
+    const {
+      historyHighest,
+      currentScore,
+      gameBoard,
+      status,
+    } = loadCommandData('2048', this.initData)
 
-    // Todo: load previous unfinished game progress
+    if (!isUndefined(gameBoard)) {
+      this.score = currentScore
+      this.gameBoard = gameBoard.map(row => row.map(item => item ? item : Number.NaN))
+      this.status = status
+    }
 
     // Start a new 2048 game:
     // Create a 4x4 game board, we use '.' to display one table cell here for simplicity
-    // Every kind of score points has its own color
-    this.initializeGameBoard()
+    // Every kind of score points has its own color.
+    if (this.status === 'START') {
+      this.spawn() // generate one more at start
+      this.status = 'GOING'
+    } else {
+      this.preventSpawn = true
+    }
 
     // Run the game loop!
     try {
-      while (this.isGameWillContinue()) {
+      do {
+        // Generate point (value is 2 or 4)
+        if (this.preventSpawn) {
+          this.preventSpawn = false // prevent spawn once when load from history
+        } else {
+          this.spawn()
+        }
+
         this.printGameBoardView()
+
+        if (this.isGameOver()) {
+          console.log(chalk.yellow('🤔 Game over!'))
+          this.gameEndStatistics(historyHighest)
+          return
+        }
 
         const actionKey = keyIn('', {hideEchoBack: true, mask: '', limit: 'qrjkhl'})
         switch (actionKey) {
@@ -288,12 +322,17 @@ export default class Game2048 extends Command {
         case 'h': this.swipeLeft(); break
         case 'l': this.swipeRight(); break
         case 'q': {
-        // Todo: save game process if necessary
-          this.exit()
-          break
+          setCommandData('2048', {
+            currentScore: this.score,
+            gameBoard: this.gameBoard,
+            status: this.status,
+          })
+          return
         }
         }
-      }
+      } while (this.isGameWillContinue())
+
+      this.gameEndStatistics(historyHighest)
     } catch (error) {
       console.log(chalk.red(`2048 Error: ${error}`))
     }
