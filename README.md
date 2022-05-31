@@ -64,7 +64,7 @@ $ npm install -g @slackoff/meditate
 $ med COMMAND
 running command...
 $ med (--version)
-@slackoff/meditate/2.1.2 darwin-x64 node-v14.19.0
+@slackoff/meditate/2.1.3 darwin-x64 node-v14.19.0
 $ med --help [COMMAND]
 USAGE
   $ med COMMAND
@@ -94,7 +94,7 @@ DESCRIPTION
   2048 Game in terminal
 ```
 
-_See code: [dist/commands/2048/index.ts](https://github.com/ShenQingchuan/meditate/blob/v2.1.2/dist/commands/2048/index.ts)_
+_See code: [dist/commands/2048/index.ts](https://github.com/ShenQingchuan/meditate/blob/v2.1.3/dist/commands/2048/index.ts)_
 
 ## `med book [FILEPATH]`
 
@@ -114,7 +114,7 @@ DESCRIPTION
   Read a novel, enjoy a story...
 ```
 
-_See code: [dist/commands/book/index.ts](https://github.com/ShenQingchuan/meditate/blob/v2.1.2/dist/commands/book/index.ts)_
+_See code: [dist/commands/book/index.ts](https://github.com/ShenQingchuan/meditate/blob/v2.1.3/dist/commands/book/index.ts)_
 
 ## `med cnpoem`
 
@@ -128,7 +128,7 @@ DESCRIPTION
   get one sentence of a Chinese poem
 ```
 
-_See code: [dist/commands/cnpoem/index.ts](https://github.com/ShenQingchuan/meditate/blob/v2.1.2/dist/commands/cnpoem/index.ts)_
+_See code: [dist/commands/cnpoem/index.ts](https://github.com/ShenQingchuan/meditate/blob/v2.1.3/dist/commands/cnpoem/index.ts)_
 
 ## `med help [COMMAND]`
 
@@ -165,7 +165,7 @@ DESCRIPTION
   initialize meditate application data.
 ```
 
-_See code: [dist/commands/init/index.ts](https://github.com/ShenQingchuan/meditate/blob/v2.1.2/dist/commands/init/index.ts)_
+_See code: [dist/commands/init/index.ts](https://github.com/ShenQingchuan/meditate/blob/v2.1.3/dist/commands/init/index.ts)_
 
 ## `med wordle`
 
@@ -182,5 +182,5 @@ DESCRIPTION
   an interesting word guessing game.
 ```
 
-_See code: [dist/commands/wordle/index.ts](https://github.com/ShenQingchuan/meditate/blob/v2.1.2/dist/commands/wordle/index.ts)_
+_See code: [dist/commands/wordle/index.ts](https://github.com/ShenQingchuan/meditate/blob/v2.1.3/dist/commands/wordle/index.ts)_
 <!-- commandsstop -->
