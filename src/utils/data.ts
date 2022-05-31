@@ -6,7 +6,7 @@ import {
   mkdirSync as fsMkdirSync,
 } from 'node:fs'
 import type {CommandDataMap} from '../types'
-import {isEmpty} from 'lodash'
+import {isEmpty} from 'underscore'
 
 export function getMedHomeDir(): string {
   const userHomeDir = process.env.HOME || process.env.USERPROFILE || '~'

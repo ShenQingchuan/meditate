@@ -1,7 +1,7 @@
 /* eslint-disable max-statements-per-line */
 import {Command}  from '@oclif/core'
 import chalk from 'chalk'
-import {isUndefined} from 'lodash'
+import {isUndefined} from 'underscore'
 import {keyIn} from 'readline-sync'
 import {loadCommandData, padString, setCommandData} from '../../utils'
 
