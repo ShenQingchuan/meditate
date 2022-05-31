@@ -2,13 +2,13 @@ import ora from 'ora'
 import chalk from 'chalk'
 import {Command, Flags} from '@oclif/core'
 import {keyIn} from 'readline-sync'
+import {emptyLineRegExp} from '../../constants'
 import {
   wrapByTerminalWidth,
   loadCommandData,
   setCommandData,
   terminalStringWidth,
 } from '../../utils'
-import {emptyLineRegExp} from '../../constants'
 import * as path from 'node:path'
 import * as fs from 'node:fs'
 
@@ -141,6 +141,8 @@ export default class Book extends Command {
       })
     }
 
+    // read from user key input
+    let multiplePagesJumpCountString = ''
     do {
       // clear screen before printing lines from book content
       console.clear()
@@ -149,7 +151,13 @@ export default class Book extends Command {
       const percentageText = chalk.bold.cyan(
         `${((sliceEnd / allLinesCount!) * 100).toFixed(2)}%`,
       )
-      console.log(`${bookName} ${progressText} - ${percentageText}`)
+      let headerString = `${bookName} ${progressText} - ${percentageText}`
+      if (multiplePagesJumpCountString.length > 0) {
+        headerString += chalk.white(` Input ➡️ ${multiplePagesJumpCountString}`)
+      }
+
+      // Print header (one line)
+      console.log(headerString)
 
       const contentSlice = this.contents.slice(sliceStart, sliceEnd)
       for (const [i, line] of contentSlice.entries()) {
@@ -158,19 +166,27 @@ export default class Book extends Command {
         )
       }
 
-      const opKey = keyIn('', {hideEchoBack: true, mask: '', limit: 'qjk'})
+      const opKey = keyIn('', {hideEchoBack: true, mask: '', limit: /qjk\d/})
       switch (opKey) {
       case 'q':
         saveProgress()
         console.clear()
         return
-      case 'j':
-        [sliceStart, sliceEnd] = pageMoveForward(
-          sliceStart,
-          sliceEnd,
-          pageSize,
-          allLinesCount,
-        )
+      case 'j': {
+        if (multiplePagesJumpCountString.length > 0) {
+          const multiJump = Number(multiplePagesJumpCountString)
+          const jumpStart = sliceStart + multiJump;
+          [sliceStart, sliceEnd] = [jumpStart, jumpStart + pageSize]
+          multiplePagesJumpCountString = '' // clear
+        } else {
+          [sliceStart, sliceEnd] = pageMoveForward(
+            sliceStart,
+            sliceEnd,
+            pageSize,
+            allLinesCount,
+          )
+        }
+
         if (sliceStart === allLinesCount) {
           console.clear()
           console.log("🎉 You've finished reading the book!")
@@ -179,17 +195,37 @@ export default class Book extends Command {
         }
 
         break
-      case 'k':
-        [sliceStart, sliceEnd] = pageMoveBackward(
-          sliceStart,
-          sliceEnd,
-          pageSize,
-        )
+      }
+
+      case 'k': {
+        if (multiplePagesJumpCountString.length > 0) {
+          const multiJump = Number(multiplePagesJumpCountString)
+          const jumpStart = sliceStart - multiJump;
+          [sliceStart, sliceEnd] = [jumpStart, jumpStart + pageSize]
+          multiplePagesJumpCountString = '' // clear
+        } else {
+          [sliceStart, sliceEnd] = pageMoveBackward(
+            sliceStart,
+            sliceEnd,
+            pageSize,
+          )
+        }
+
         if (sliceEnd === 0) {
-          return
+          console.clear()
+          console.log("⛔️ You've just moved out the book's start!");
+          [sliceStart, sliceEnd] = [0, pageSize]
         }
 
         break
+      }
+
+      default:
+        if (opKey === '0' && multiplePagesJumpCountString.length === 0) {
+          break // digits are not need to start with 0
+        } else {
+          multiplePagesJumpCountString += opKey
+        }
       }
       // eslint-disable-next-line no-unmodified-loop-condition
     } while (inReadingMode)

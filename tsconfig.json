@@ -6,6 +6,7 @@
     "module": "commonjs",
     "outDir": "dist",
     "rootDir": "src",
+    "moduleResolution": "node",
     "strict": true,
     "target": "es2019",
     "sourceMap": true,

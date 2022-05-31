@@ -21,6 +21,14 @@ med book ~/Downloads/天才基本法.txt
 
 ![read view](https://user-images.githubusercontent.com/46062972/150922709-00989370-f025-4c89-beaf-fb041c50f21b.png)
 
+You can also input numbers to jump with multiple pages change. (After you input these numbers, you can use `j` or `k` to jump to the next/previous page.)
+
+<img src="https://user-images.githubusercontent.com/46062972/171224113-35d8ead1-f4f4-49ba-b80c-b85438b9ca18.png" width="528">
+
+Here I'll go on typing a `j` as demo:
+
+<img src="https://user-images.githubusercontent.com/46062972/171225612-e64c7959-7969-44a8-86d4-5da524076870.png" width="328">
+
 **Search view**
 
 ```bash

@@ -1,3 +1,13 @@
 {
-  "extends": ["oclif", "oclif-typescript"]
+  "extends": ["oclif", "oclif-typescript"],
+  "rules": {
+    "unicorn/import-style": [
+      "error",
+      {
+        "styles": {
+          "chalk": false
+        }
+      }
+    ]
+  }
 }
