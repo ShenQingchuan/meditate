@@ -5,7 +5,6 @@ import {
   existsSync as fsExistsSync,
   mkdirSync as fsMkdirSync,
 } from 'node:fs'
-import type {CommandDataMap} from '../types'
 import {isEmpty} from 'underscore'
 
 export function getMedHomeDir(): string {
