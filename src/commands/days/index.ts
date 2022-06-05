@@ -24,7 +24,7 @@ export default class Days extends Command {
     desc: Flags.string({char: 'd', description: 'description of a memo date', dependsOn: ['new']}),
   }
 
-  static args = [{name: 'date'}]
+  static args = []
 
   private isAppRunning = true;
   private memoDaysMap: DaysDataMap = {};
