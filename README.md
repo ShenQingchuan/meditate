@@ -49,6 +49,10 @@ Here I'll go on typing a `j` as demo:
 
 ![game2048](https://user-images.githubusercontent.com/46062972/171021184-e6644620-515a-4652-bc30-50ebb8ec2b92.png)
 
+## Days
+
+![days](https://user-images.githubusercontent.com/46062972/172065203-d8db4e17-73fd-4720-9b6f-6912b04d383c.png)
+
 
 <!-- toc -->
 * [meditate](#meditate)
@@ -64,7 +68,7 @@ $ npm install -g @slackoff/meditate
 $ med COMMAND
 running command...
 $ med (--version)
-@slackoff/meditate/2.1.3 darwin-x64 node-v14.19.0
+@slackoff/meditate/2.2.0 linux-x64 node-v18.2.0
 $ med --help [COMMAND]
 USAGE
   $ med COMMAND
@@ -78,6 +82,7 @@ USAGE
 * [`med 2048`](#med-2048)
 * [`med book [FILEPATH]`](#med-book-filepath)
 * [`med cnpoem`](#med-cnpoem)
+* [`med days [DATE]`](#med-days-date)
 * [`med help [COMMAND]`](#med-help-command)
 * [`med init`](#med-init)
 * [`med wordle`](#med-wordle)
@@ -94,7 +99,7 @@ DESCRIPTION
   2048 Game in terminal
 ```
 
-_See code: [dist/commands/2048/index.ts](https://github.com/ShenQingchuan/meditate/blob/v2.1.3/dist/commands/2048/index.ts)_
+_See code: [dist/commands/2048/index.ts](https://github.com/ShenQingchuan/meditate/blob/v2.2.0/dist/commands/2048/index.ts)_
 
 ## `med book [FILEPATH]`
 
@@ -114,7 +119,7 @@ DESCRIPTION
   Read a novel, enjoy a story...
 ```
 
-_See code: [dist/commands/book/index.ts](https://github.com/ShenQingchuan/meditate/blob/v2.1.3/dist/commands/book/index.ts)_
+_See code: [dist/commands/book/index.ts](https://github.com/ShenQingchuan/meditate/blob/v2.2.0/dist/commands/book/index.ts)_
 
 ## `med cnpoem`
 
@@ -128,7 +133,32 @@ DESCRIPTION
   get one sentence of a Chinese poem
 ```
 
-_See code: [dist/commands/cnpoem/index.ts](https://github.com/ShenQingchuan/meditate/blob/v2.1.3/dist/commands/cnpoem/index.ts)_
+_See code: [dist/commands/cnpoem/index.ts](https://github.com/ShenQingchuan/meditate/blob/v2.2.0/dist/commands/cnpoem/index.ts)_
+
+## `med days [DATE]`
+
+Memorize your important days.
+
+```
+USAGE
+  $ med days [DATE] [-d <value> -n <value>]
+
+FLAGS
+  -d, --desc=<value>  description of a memo date
+  -n, --new=<value>   create a new memorize day
+
+DESCRIPTION
+  Memorize your important days.
+
+  Input date format could be any valid connector: dot(.)、slash(/) and dash(-)
+
+EXAMPLES
+  $ med days
+
+  $ med days -n 2022.2.1 -d "Spring Festival"
+```
+
+_See code: [dist/commands/days/index.ts](https://github.com/ShenQingchuan/meditate/blob/v2.2.0/dist/commands/days/index.ts)_
 
 ## `med help [COMMAND]`
 
@@ -165,7 +195,7 @@ DESCRIPTION
   initialize meditate application data.
 ```
 
-_See code: [dist/commands/init/index.ts](https://github.com/ShenQingchuan/meditate/blob/v2.1.3/dist/commands/init/index.ts)_
+_See code: [dist/commands/init/index.ts](https://github.com/ShenQingchuan/meditate/blob/v2.2.0/dist/commands/init/index.ts)_
 
 ## `med wordle`
 
@@ -182,5 +212,5 @@ DESCRIPTION
   an interesting word guessing game.
 ```
 
-_See code: [dist/commands/wordle/index.ts](https://github.com/ShenQingchuan/meditate/blob/v2.1.3/dist/commands/wordle/index.ts)_
+_See code: [dist/commands/wordle/index.ts](https://github.com/ShenQingchuan/meditate/blob/v2.2.0/dist/commands/wordle/index.ts)_
 <!-- commandsstop -->

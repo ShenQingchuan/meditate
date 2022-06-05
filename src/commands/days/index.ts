@@ -9,7 +9,8 @@ const headerTitle = 'Meditate Days'
 const timestampToDateDisplayString = (timestamp: string) => new Date(Number(timestamp)).toLocaleDateString()
 
 export default class Days extends Command {
-  static description = 'Memorize your important days.'
+  static description = `Memorize your important days.
+  Input date format could be any valid connector: dot(.)、slash(/) and dash(-)`
 
   static examples = [
     '<%= config.bin %> <%= command.id %>',
