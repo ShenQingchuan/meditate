@@ -51,7 +51,7 @@ Here I'll go on typing a `j` as demo:
 
 ## Days
 
-![days](https://user-images.githubusercontent.com/46062972/172065203-d8db4e17-73fd-4720-9b6f-6912b04d383c.png)
+![days](https://user-images.githubusercontent.com/46062972/172086572-170fb83b-ec57-466a-9c53-c5b2831786bd.png)
 
 
 <!-- toc -->
@@ -68,7 +68,7 @@ $ npm install -g @slackoff/meditate
 $ med COMMAND
 running command...
 $ med (--version)
-@slackoff/meditate/2.2.1 linux-x64 node-v18.2.0
+@slackoff/meditate/2.2.2 linux-x64 node-v18.2.0
 $ med --help [COMMAND]
 USAGE
   $ med COMMAND
@@ -99,7 +99,7 @@ DESCRIPTION
   2048 Game in terminal
 ```
 
-_See code: [dist/commands/2048/index.ts](https://github.com/ShenQingchuan/meditate/blob/v2.2.1/dist/commands/2048/index.ts)_
+_See code: [dist/commands/2048/index.ts](https://github.com/ShenQingchuan/meditate/blob/v2.2.2/dist/commands/2048/index.ts)_
 
 ## `med book [FILEPATH]`
 
@@ -119,7 +119,7 @@ DESCRIPTION
   Read a novel, enjoy a story...
 ```
 
-_See code: [dist/commands/book/index.ts](https://github.com/ShenQingchuan/meditate/blob/v2.2.1/dist/commands/book/index.ts)_
+_See code: [dist/commands/book/index.ts](https://github.com/ShenQingchuan/meditate/blob/v2.2.2/dist/commands/book/index.ts)_
 
 ## `med cnpoem`
 
@@ -133,7 +133,7 @@ DESCRIPTION
   get one sentence of a Chinese poem
 ```
 
-_See code: [dist/commands/cnpoem/index.ts](https://github.com/ShenQingchuan/meditate/blob/v2.2.1/dist/commands/cnpoem/index.ts)_
+_See code: [dist/commands/cnpoem/index.ts](https://github.com/ShenQingchuan/meditate/blob/v2.2.2/dist/commands/cnpoem/index.ts)_
 
 ## `med days`
 
@@ -158,7 +158,7 @@ EXAMPLES
   $ med days -n 2022.2.1 -d "Spring Festival"
 ```
 
-_See code: [dist/commands/days/index.ts](https://github.com/ShenQingchuan/meditate/blob/v2.2.1/dist/commands/days/index.ts)_
+_See code: [dist/commands/days/index.ts](https://github.com/ShenQingchuan/meditate/blob/v2.2.2/dist/commands/days/index.ts)_
 
 ## `med help [COMMAND]`
 
@@ -195,7 +195,7 @@ DESCRIPTION
   initialize meditate application data.
 ```
 
-_See code: [dist/commands/init/index.ts](https://github.com/ShenQingchuan/meditate/blob/v2.2.1/dist/commands/init/index.ts)_
+_See code: [dist/commands/init/index.ts](https://github.com/ShenQingchuan/meditate/blob/v2.2.2/dist/commands/init/index.ts)_
 
 ## `med wordle`
 
@@ -212,5 +212,5 @@ DESCRIPTION
   an interesting word guessing game.
 ```
 
-_See code: [dist/commands/wordle/index.ts](https://github.com/ShenQingchuan/meditate/blob/v2.2.1/dist/commands/wordle/index.ts)_
+_See code: [dist/commands/wordle/index.ts](https://github.com/ShenQingchuan/meditate/blob/v2.2.2/dist/commands/wordle/index.ts)_
 <!-- commandsstop -->
