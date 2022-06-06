@@ -1,5 +1,7 @@
-import {Command, Flags} from '@oclif/core'
 import chalk from 'chalk'
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
+import {Command, Flags} from '@oclif/core'
 import {keyIn} from 'readline-sync'
 import {isEmpty} from 'underscore'
 import {loadCommandData, parseDate, setCommandData} from '../../utils'
@@ -7,6 +9,7 @@ import {loadCommandData, parseDate, setCommandData} from '../../utils'
 const fieldConnector = '  '
 const headerTitle = 'Meditate Days'
 const timestampToDateDisplayString = (timestamp: string) => new Date(Number(timestamp)).toLocaleDateString()
+dayjs.extend(relativeTime)
 
 export default class Days extends Command {
   static description = `Memorize your important days.
@@ -44,8 +47,10 @@ export default class Days extends Command {
     // print header
     const tableHeaderDate = 'Date'
     const tabelHeaderDesc = 'Description'
+    const tableHeaderFromNow = 'From now'
     let maxKeyLength = tableHeaderDate.length
     let maxDescLength = tabelHeaderDesc.length
+    let maxFromNowLength = tableHeaderFromNow.length
     for (const [key, value] of Object.entries(this.memoDaysMap)) {
       const dateDisplayString = timestampToDateDisplayString(key)
       if (dateDisplayString.length > maxKeyLength) {
@@ -55,12 +60,19 @@ export default class Days extends Command {
       if (value.desc.length > maxDescLength) {
         maxDescLength = value.desc.length
       }
+
+      const fromNowField = timestampToDateDisplayString(key)
+      if (fromNowField.length > maxFromNowLength) {
+        maxFromNowLength = fromNowField.length
+      }
     }
 
     const fieldLength = maxKeyLength + fieldConnector.length + maxDescLength
     const padLength = Math.floor((fieldLength - headerTitle.length) / 2)
     const padBlank = Array.from({length: padLength}).fill(' ').join('')
-    const tableHeader = tableHeaderDate.padEnd(maxKeyLength, ' ') + fieldConnector + tabelHeaderDesc.padEnd(maxDescLength, ' ')
+    const tableHeader = tableHeaderDate.padEnd(maxKeyLength, ' ') +
+      fieldConnector + tabelHeaderDesc.padEnd(maxDescLength, ' ') +
+      fieldConnector + tableHeaderFromNow.padEnd(maxFromNowLength, ' ')
     const helpTipString = chalk.green('(J)-Next (K)-Previous')
     console.log(chalk.bgCyan.black.bold(padBlank + headerTitle + padBlank) + '\n' + helpTipString + '\n')
     console.log(chalk.bold(tableHeader))
@@ -73,7 +85,13 @@ export default class Days extends Command {
     for (const [i, [key, value]] of sortedMemoDates.entries()) {
       const keyFieldStr = timestampToDateDisplayString(key).padEnd(maxKeyLength, ' ')
       const valueFieldStr = value.desc.padEnd(maxDescLength, ' ')
-      let fieldStr = keyFieldStr + fieldConnector + valueFieldStr
+      // build from now field
+      const now = dayjs()
+      const daysDiff = Math.abs(now.diff(keyFieldStr, 'day'))
+      const fromNowFieldStr = now.isBefore(keyFieldStr) ? `in ${daysDiff} days` : `${daysDiff} days ago`
+      let fieldStr = keyFieldStr +
+        fieldConnector + valueFieldStr +
+        fieldConnector + fromNowFieldStr
       if (i === this.selectedFieldIndex) {
         fieldStr = chalk.yellow(fieldStr)
       }
@@ -94,7 +112,9 @@ export default class Days extends Command {
       const parseDateResult = parseDate(date)
       if (parseDateResult) {
         const [dateObj] = parseDateResult
-        this.memoDaysMap[dateObj.getTime()] = {desc: desc ?? ''} // timestamp as key
+        this.memoDaysMap[dateObj.getTime()] = {
+          desc: desc ?? '',
+        }
       }
     }
   }
