@@ -26,7 +26,7 @@
     "node-fetch": "2",
     "ora": "^5.4.1",
     "random-word-by-length": "^0.1.0",
-    "random-words": "^1.1.2",
+    "random-words": "^1.2.0",
     "readline-sync": "^1.4.10",
     "string-width": "4.2.3",
     "text-table": "^0.2.0",
