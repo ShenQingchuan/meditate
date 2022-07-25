@@ -3,19 +3,24 @@ import {ChinesePuncRegExp} from '../constants'
 export function wrapByTerminalWidth(str: string, width: number): string[] {
   const slices: string[] = []
   // algorithm: split `str` to several substrings,
-  // their terminal width are all `len`
+  // their terminal width are all `width`
   let accumulatedString = ''
   let accumulatedWidth = 0
-  for (const element of str) {
-    const w = terminalStringWidth(element)
-    if (accumulatedWidth + w > width) {
+  for (const char of str) {
+    const w = terminalStringWidth(char)
+    if (accumulatedWidth + w >= width) {
       slices.push(accumulatedString)
       accumulatedString = ''
       accumulatedWidth = 0
     } else {
-      accumulatedString += element
+      accumulatedString += char
       accumulatedWidth += w
     }
+  }
+
+  // remaining part
+  if (accumulatedString !== '') {
+    slices.push(accumulatedString)
   }
 
   return slices

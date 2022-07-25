@@ -316,17 +316,21 @@ export default class Book extends Command {
     const maxColumns = process.stdout.columns
     const contentMaxLength = maxColumns - (maxLineCountLength + 4) // 4 = space + vertical line + 2 space
 
-    for (let i = 0; i < this.contents.length; i++) {
-      const line = this.contents[i]
+    const wrappedOverflow: string[] = []
+    for (const line of this.contents) {
       const width = terminalStringWidth(line)
       if (width > contentMaxLength) {
-        const cutSlice = wrapByTerminalWidth(
+        const slices = wrapByTerminalWidth(
           line,
           Math.round(contentMaxLength * 0.8),
         )
-        this.contents.splice(i, 1, ...cutSlice)
+        wrappedOverflow.push(...slices)
+      } else {
+        wrappedOverflow.push(line)
       }
     }
+
+    this.contents = wrappedOverflow
   }
 
   async run(): Promise<void> {
