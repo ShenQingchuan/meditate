@@ -2,7 +2,8 @@ import {Command, Flags} from '@oclif/core'
 import chalk from 'chalk'
 import dayjs, {Dayjs} from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
-import {keyIn, question} from 'readline-sync'
+import {keyIn} from 'readline-sync'
+import prompt from 'prompt'
 import {
   allWords,
   answers,
@@ -211,8 +212,7 @@ export default class Wordle extends Command {
       console.clear()
       switch (calendarViewKeyIn) {
       case 'q':
-        this.exit()
-        break
+        return
 
       case 'j':
       case 'k':
@@ -258,7 +258,7 @@ export default class Wordle extends Command {
     })
   }
 
-  openGameView(wordleData: WordleData): void {
+  async openGameView(wordleData: WordleData): Promise<void> {
     const answer = getWordOfTheDay()
     let round = 0
 
@@ -266,21 +266,54 @@ export default class Wordle extends Command {
       // waiting for user sinput
       let input = ''
       let isInputValid = false
-      let alertMsg = process.stdout.rows < 16 ? narrowViewWarn : ''
+      const inputPlaceholder = 'input your guess ...'
+      let alertMsg = process.stdout.rows < 16 ? narrowViewWarn : inputPlaceholder
 
       do {
         printEvaluationsView(this.evaluations)
-        input = question(chalk.cyan(`${alertMsg}\ninput your answer: `))
-        if (!validWordleGuessRegExp.test(input)) {
-          alertMsg = chalk.redBright(
-            'Answer is supposed to contain 5 letters only',
-          )
-        } else if (!allWords.includes(input)) {
-          alertMsg = chalk.redBright('Not in the word list.')
-        } else if (input.length < 5) {
-          alertMsg = chalk.redBright('Answer words contains 5 letters')
-        } else {
-          isInputValid = true
+        prompt.start({
+          message: `WORDLE GAME - ${dayjs().format('YYYY-DD-MM')}\n`,
+        })
+        prompt.delimiter = ''
+        try {
+          // eslint-disable-next-line no-await-in-loop
+          await new Promise<void>((resolve, reject) => {
+            prompt.get({
+              properties: {
+                answer: {
+                  pattern: /[a-z]{5}/,
+                  description: alertMsg,
+                  required: true,
+                },
+              },
+            }, (err, result) => {
+              if (err) {
+                reject(new Error(`Read user input failed ! err: ${err}`))
+              }
+
+              try {
+                input = result.answer as string
+                if (!validWordleGuessRegExp.test(input)) {
+                  alertMsg = chalk.redBright(
+                    'Answer is supposed to contain 5 letters only',
+                  )
+                } else if (!allWords.includes(input)) {
+                  alertMsg = chalk.redBright('Not in the word list.')
+                } else if (input.length < 5) {
+                  alertMsg = chalk.redBright('Answer words contains 5 letters')
+                } else {
+                  isInputValid = true
+                }
+
+                resolve()
+              } catch (error) {
+                reject(error)
+              }
+            })
+          })
+        } catch (error) {
+          this.log('\n' + chalk.red(String(error)) + '\n')
+          return
         }
       } while (!isInputValid)
 
@@ -289,10 +322,10 @@ export default class Wordle extends Command {
         printEvaluationsView(this.evaluations)
         console.log(chalk.green('🎉 Congratulations!\n'))
         this.saveEvaluations(wordleData)
-        this.exit()
-      } else {
-        round++
+        return
       }
+
+      round++
     }
 
     printEvaluationsView(this.evaluations) // after `round` is assigned to 6
@@ -336,7 +369,7 @@ export default class Wordle extends Command {
           printAlreadyPassedInfo(next)
         }
 
-        this.exit()
+        return
       }
 
       // if it's a new daily game
