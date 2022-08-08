@@ -267,14 +267,19 @@ export default class Book extends Command {
       return
     }
 
+    let multiplePagesJumpCountString = ''
     let inSearchingMode = true
     let showSearchResultIndex = 0
     do {
       console.clear()
-      const searchTip = [
+      let searchTip = [
         chalk.bold.yellow(`Searching: ${search}`),
         chalk.cyan(`${showSearchResultIndex + 1} / ${slices.length} results`),
       ].join(' - ')
+      if (multiplePagesJumpCountString.length > 0) {
+        searchTip += chalk.white(` Input ➡️ ${multiplePagesJumpCountString}`)
+      }
+
       console.log(searchTip)
 
       const currentSlice = slices[showSearchResultIndex]
@@ -283,19 +288,28 @@ export default class Book extends Command {
         console.log(`${lineNumberText}  ${line}`)
       }
 
-      const opKey = keyIn('', {hideEchoBack: true, mask: '', limit: 'oqjk'})
+      const opKey = keyIn('', {hideEchoBack: true, mask: '', limit: /qjk\d/})
       switch (opKey) {
       case 'j':
-        showSearchResultIndex += 1
-        if (showSearchResultIndex === slices.length) {
-          showSearchResultIndex = 0
+        showSearchResultIndex +=
+          multiplePagesJumpCountString.length > 0 ?
+            Number(multiplePagesJumpCountString) :
+            1
+        multiplePagesJumpCountString = ''
+
+        if (showSearchResultIndex >= slices.length) {
+          showSearchResultIndex = slices.length - 1
         }
 
         break
       case 'k':
-        showSearchResultIndex -= 1
-        if (showSearchResultIndex < 0) {
-          showSearchResultIndex = slices.length - 1
+        showSearchResultIndex -=
+          multiplePagesJumpCountString.length > 0 ?
+            Number(multiplePagesJumpCountString) :
+            1
+        multiplePagesJumpCountString = ''
+        if (showSearchResultIndex <= 0) {
+          showSearchResultIndex = 0
         }
 
         break
@@ -305,6 +319,13 @@ export default class Book extends Command {
       case 'q':
         console.clear()
         return
+      default: {
+        if (opKey === '0' && multiplePagesJumpCountString.length === 0) {
+          break // digits are not need to start with 0
+        } else if (/\d/.test(opKey)) {
+          multiplePagesJumpCountString += opKey
+        }
+      }
       }
     } while (inSearchingMode)
 
