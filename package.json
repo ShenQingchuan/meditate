@@ -37,7 +37,7 @@
     "@oclif/test": "^2",
     "@types/chai": "^4",
     "@types/mocha": "^9.0.0",
-    "@types/node": "^16.11.38",
+    "@types/node": "^16.11.62",
     "@types/node-fetch": "2.x",
     "@types/prompt": "^1.1.2",
     "@types/random-words": "^1.1.2",
