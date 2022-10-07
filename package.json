@@ -31,7 +31,7 @@
     "readline-sync": "^1.4.10",
     "string-width": "4.2.3",
     "text-table": "^0.2.0",
-    "underscore": "^1.13.3"
+    "underscore": "^1.13.6"
   },
   "devDependencies": {
     "@oclif/test": "^2",
