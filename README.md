@@ -37,6 +37,10 @@ Here I'll go on typing a `j` as demo:
 
 ![search view](https://user-images.githubusercontent.com/46062972/150922533-9d76b830-55c3-4c2f-8eed-e87916ad3777.png)
 
+You can even add an alias for your book:
+
+![set alias](https://user-images.githubusercontent.com/46062972/194533089-c4f37001-d76f-4817-96e6-d8b27cb1b6d4.png)
+
 ## Wordle game
 
 ![Wordle game](https://user-images.githubusercontent.com/46062972/151534206-de70fdec-9960-4aae-be85-9333441a90b7.png)
