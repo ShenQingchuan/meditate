@@ -1,6 +1,6 @@
 {
   "name": "@slackoff/meditate",
-  "version": "2.2.6",
+  "version": "2.3.0",
   "description": "a Node.js CLI application for fun.",
   "author": "ShenQingchuan",
   "bin": {

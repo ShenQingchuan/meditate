@@ -53,18 +53,13 @@ Here I'll go on typing a `j` as demo:
 
 ![days](https://user-images.githubusercontent.com/46062972/172086572-170fb83b-ec57-466a-9c53-c5b2831786bd.png)
 
-
 <!-- toc -->
 * [meditate](#meditate)
 * [Preview](#preview)
 * [Usage](#usage)
 * [Commands](#commands)
 <!-- tocstop -->
-* [meditate](#meditate)
-* [Preview](#preview)
-* [Usage](#usage)
-* [Commands](#commands)
-<!-- tocstop -->
+
 # Usage
 
 <!-- usage -->
@@ -74,18 +69,6 @@ $ med COMMAND
 running command...
 $ med (--version)
 @slackoff/meditate/2.3.0 win32-x64 node-v16.17.0
-$ med --help [COMMAND]
-USAGE
-  $ med COMMAND
-...
-```
-<!-- usagestop -->
-```sh-session
-$ npm install -g @slackoff/meditate
-$ med COMMAND
-running command...
-$ med (--version)
-@slackoff/meditate/2.2.6 darwin-x64 node-v16.13.1
 $ med --help [COMMAND]
 USAGE
   $ med COMMAND
@@ -246,139 +229,4 @@ DESCRIPTION
 ```
 
 _See code: [dist/commands/wordle/index.ts](https://github.com/ShenQingchuan/meditate/blob/v2.3.0/dist/commands/wordle/index.ts)_
-<!-- commandsstop -->
-* [`med 2048`](#med-2048)
-* [`med book [FILEPATH]`](#med-book-filepath)
-* [`med cnpoem`](#med-cnpoem)
-* [`med days`](#med-days)
-* [`med help [COMMAND]`](#med-help-command)
-* [`med init`](#med-init)
-* [`med wordle`](#med-wordle)
-
-## `med 2048`
-
-2048 Game in terminal
-
-```
-USAGE
-  $ med 2048
-
-DESCRIPTION
-  2048 Game in terminal
-```
-
-_See code: [dist/commands/2048/index.ts](https://github.com/ShenQingchuan/meditate/blob/v2.2.6/dist/commands/2048/index.ts)_
-
-## `med book [FILEPATH]`
-
-Read a novel, enjoy a story...
-
-```
-USAGE
-  $ med book [FILEPATH] [-h] [-r] [-s <value>] [-j <value>]
-
-FLAGS
-  -h, --help            help information for book reading command.
-  -j, --jump=<value>    assign a position to start reading.
-  -r, --restart         restart reading progress of a given book.
-  -s, --search=<value>  open searching view to locate given words.
-
-DESCRIPTION
-  Read a novel, enjoy a story...
-```
-
-_See code: [dist/commands/book/index.ts](https://github.com/ShenQingchuan/meditate/blob/v2.2.6/dist/commands/book/index.ts)_
-
-## `med cnpoem`
-
-get one sentence of a Chinese poem
-
-```
-USAGE
-  $ med cnpoem
-
-DESCRIPTION
-  get one sentence of a Chinese poem
-```
-
-_See code: [dist/commands/cnpoem/index.ts](https://github.com/ShenQingchuan/meditate/blob/v2.2.6/dist/commands/cnpoem/index.ts)_
-
-## `med days`
-
-Memorize your important days.
-
-```
-USAGE
-  $ med days [-d <value> -n <value>]
-
-FLAGS
-  -d, --desc=<value>  description of a memo date
-  -n, --new=<value>   create a new memorize day
-
-DESCRIPTION
-  Memorize your important days.
-
-  Input date format could be any valid connector: dot(.)、slash(/) and dash(-)
-
-EXAMPLES
-  $ med days
-
-  $ med days -n 2022.2.1 -d "Spring Festival"
-```
-
-_See code: [dist/commands/days/index.ts](https://github.com/ShenQingchuan/meditate/blob/v2.2.6/dist/commands/days/index.ts)_
-
-## `med help [COMMAND]`
-
-Display help for med.
-
-```
-USAGE
-  $ med help [COMMAND] [-n]
-
-ARGUMENTS
-  COMMAND  Command to show help for.
-
-FLAGS
-  -n, --nested-commands  Include all nested commands in the output.
-
-DESCRIPTION
-  Display help for med.
-```
-
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.1.12/src/commands/help.ts)_
-
-## `med init`
-
-initialize meditate application data.
-
-```
-USAGE
-  $ med init [-h]
-
-FLAGS
-  -h, --help  Show CLI help.
-
-DESCRIPTION
-  initialize meditate application data.
-```
-
-_See code: [dist/commands/init/index.ts](https://github.com/ShenQingchuan/meditate/blob/v2.2.6/dist/commands/init/index.ts)_
-
-## `med wordle`
-
-an interesting word guessing game.
-
-```
-USAGE
-  $ med wordle [-h]
-
-FLAGS
-  -h, --history  print current month's game record
-
-DESCRIPTION
-  an interesting word guessing game.
-```
-
-_See code: [dist/commands/wordle/index.ts](https://github.com/ShenQingchuan/meditate/blob/v2.2.6/dist/commands/wordle/index.ts)_
 <!-- commandsstop -->
