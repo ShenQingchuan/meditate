@@ -1126,10 +1126,10 @@ available-typed-arrays@^1.0.5:
   resolved "https://registry.yarnpkg.com/available-typed-arrays/-/available-typed-arrays-1.0.5.tgz#92f95616501069d07d10edb2fc37d3e1c65123b7"
   integrity sha512-DMD0KiN46eipeziST1LPP/STfDU0sufISXmjSgvVsoU2tqxctQeASejWcfNtxYKqETM1UxQ8sp2OrSBWpHY6sw==
 
-aws-sdk@^2.1226.0:
-  version "2.1227.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1227.0.tgz#2ef47b77aa104f07bf5b233c06adf51f166cd390"
-  integrity sha512-L6vnopVXVXKEqi0R4i54F6xSemczd/aRy4UscqnfpyvNYr9yLL3jVApFo7OX8hxompe/tgxdQFXvMiNzhkSrwQ==
+aws-sdk@^2.1227.0:
+  version "2.1230.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1230.0.tgz#d7ebf384f2cb9b312325c537d38bec47e5ba8087"
+  integrity sha512-7Y260dvzr7b8/lZhg6A7h5WyHvfCgdFL0NiBgCuT3/xlw9rvq9b08JNYErEpaJSmo+A5hW35n6wtzii4/FUSTA==
   dependencies:
     buffer "4.9.2"
     events "1.1.1"
@@ -3870,15 +3870,15 @@ object.assign@^4.1.4:
     object-keys "^1.1.1"
 
 oclif@^3:
-  version "3.2.12"
-  resolved "https://registry.yarnpkg.com/oclif/-/oclif-3.2.12.tgz#39c046d91924d27964d1496e2f189523ca5ac2b4"
-  integrity sha512-a8yRwGbL5vIFiFbLQJFVL5niDA3fcD542TH22NTFIkmU5bMApGP88MIA4Oa48VR9Qu35hDI9nvpQVLuoqb/iBQ==
+  version "3.2.13"
+  resolved "https://registry.yarnpkg.com/oclif/-/oclif-3.2.13.tgz#7763af4f3e9fd7634b142d9d5f9367d486464c29"
+  integrity sha512-B6ahAuoZKf4oolE75n/PXCEcV1sACDhD6c4RJwzSXhpUEwiCJMPLbbVM9qrLzqqee+PbFgJtIKA8Aiv6jWi7BA==
   dependencies:
     "@oclif/core" "^1.16.4"
     "@oclif/plugin-help" "^5.1.14"
     "@oclif/plugin-not-found" "^2.3.3"
     "@oclif/plugin-warn-if-update-available" "^2.0.6"
-    aws-sdk "^2.1226.0"
+    aws-sdk "^2.1227.0"
     concurrently "^7.4.0"
     debug "^4.3.3"
     find-yarn-workspace-root "^2.0.0"
