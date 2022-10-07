@@ -90,6 +90,7 @@ export default class Book extends Command {
   initData = (): BookData => {
     return {
       history: {},
+      alias: {},
     }
   };
 
@@ -363,10 +364,13 @@ export default class Book extends Command {
     try {
       let filepath: string = args.filepath
       if (!filepath) {
-        return
+        this.error('‼️ Please provide a filepath')
       }
 
-      if (args.filepath.startsWith('.')) {
+      // if `filepath` is an alias, then replace it with the real filepath
+      if (bookData.alias[filepath]) {
+        filepath = bookData.alias[filepath]
+      } else if (args.filepath.startsWith('.')) {
         // eslint-disable-next-line unicorn/prefer-module
         filepath = path.resolve(__dirname, filepath)
       }

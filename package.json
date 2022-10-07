@@ -43,6 +43,7 @@
     "@types/random-words": "^1.1.2",
     "@types/readline-sync": "^1.4.4",
     "@types/text-table": "^0.2.2",
+    "bumpp": "^8.2.1",
     "chai": "^4",
     "eslint": "^7.32.0",
     "eslint-config-oclif": "^4",
@@ -69,10 +70,11 @@
     "build": "shx rm -rf dist && tsc -b",
     "lint": "eslint . --ext .ts --config .eslintrc",
     "postpack": "shx rm -f oclif.manifest.json",
-    "posttest": "yarn lint",
-    "prepack": "yarn build && oclif manifest && oclif readme && eslint . --fix",
+    "posttest": "pnpm lint",
+    "prepack": "pnpm build && oclif manifest && oclif readme && eslint . --fix",
     "test": "mocha --forbid-only \"test/**/*.test.ts\"",
-    "version": "oclif readme && git add README.md"
+    "version": "oclif readme && git add README.md",
+    "release": "bumpp && pnpm publish"
   },
   "engines": {
     "node": ">=12.0.0"

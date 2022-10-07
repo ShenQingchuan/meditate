@@ -4,4 +4,5 @@ declare interface BookReadHistory {
 }
 declare interface BookData {
   history: Record<string, BookReadHistory>;
+  alias: Record<string, string>; // alias name -> book path
 }
