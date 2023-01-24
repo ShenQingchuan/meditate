@@ -39,7 +39,7 @@
     "@types/mocha": "^9.0.0",
     "@types/node": "^16.11.62",
     "@types/node-fetch": "2.x",
-    "@types/prompt": "^1.1.2",
+    "@types/prompt": "^1.1.4",
     "@types/random-words": "^1.1.2",
     "@types/readline-sync": "^1.4.4",
     "@types/text-table": "^0.2.2",
