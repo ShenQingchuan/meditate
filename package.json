@@ -42,7 +42,7 @@
     "@types/prompt": "^1.1.5",
     "@types/random-words": "^1.1.2",
     "@types/readline-sync": "^1.4.4",
-    "@types/text-table": "^0.2.2",
+    "@types/text-table": "^0.2.4",
     "bumpp": "^8.2.1",
     "chai": "^4",
     "eslint": "^7.32.0",
