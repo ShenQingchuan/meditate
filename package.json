@@ -41,7 +41,7 @@
     "@types/node-fetch": "2.x",
     "@types/prompt": "^1.1.5",
     "@types/random-words": "^1.1.2",
-    "@types/readline-sync": "^1.4.4",
+    "@types/readline-sync": "^1.4.8",
     "@types/text-table": "^0.2.2",
     "bumpp": "^8.2.1",
     "chai": "^4",
