@@ -20,7 +20,7 @@
     "@oclif/core": "^1",
     "@oclif/plugin-help": "^5",
     "@oclif/plugin-plugins": "^2.4.7",
-    "@types/underscore": "^1.11.9",
+    "@types/underscore": "^1.11.15",
     "chalk": "4.1.2",
     "dayjs": "^1.11.9",
     "node-fetch": "2",
